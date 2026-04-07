@@ -140,6 +140,9 @@ const authSlice = createSlice({
         state.isAuthenticated = true;
         state.user = action.payload.user;
         state.message = action.payload.message;
+        if (action.payload.token) {
+          localStorage.setItem("token", action.payload.token);
+        }
       })
       .addCase(verifyOTP.rejected, (state, action) => {
         state.loading = false;
@@ -154,6 +157,9 @@ const authSlice = createSlice({
         state.isAuthenticated = true;
         state.user = action.payload.user;
         state.message = action.payload.message;
+        if (action.payload.token) {
+          localStorage.setItem("token", action.payload.token);
+        }
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -166,6 +172,7 @@ const authSlice = createSlice({
         state.user = null;
         state.isAuthenticated = false;
         state.message = "Logged out successfully";
+        localStorage.removeItem("token");
       });
 
     // Load User
