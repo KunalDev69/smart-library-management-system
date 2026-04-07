@@ -41,7 +41,11 @@ exports.register = catchAsyncErrors(async (req, res, next) => {
   });
 
   // Send OTP for email verification
-  await sendVerificationCode(user);
+  try {
+    await sendVerificationCode(user);
+  } catch (error) {
+    console.error("OTP email failed:", error.message);
+  }
 
   res.status(201).json({
     success: true,
