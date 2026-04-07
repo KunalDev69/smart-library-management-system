@@ -14,12 +14,24 @@ const BorrowCard = ({ record, onReturn }) => {
           className={`text-xs font-semibold px-2 py-1 rounded-full ${
             record.status === "returned"
               ? "bg-green-100 dark:bg-emerald-500/10 text-green-700 dark:text-emerald-400"
+              : record.status === "pending"
+              ? "bg-yellow-100 dark:bg-yellow-500/10 text-yellow-700 dark:text-yellow-400"
+              : record.status === "rejected"
+              ? "bg-red-100 dark:bg-red-500/10 text-red-700 dark:text-red-400"
               : isOverdue
               ? "bg-red-100 dark:bg-red-500/10 text-red-700 dark:text-red-400"
               : "bg-blue-100 dark:bg-cyan-500/10 text-blue-700 dark:text-cyan-400"
           }`}
         >
-          {record.status === "returned" ? "Returned" : isOverdue ? "Overdue" : "Borrowed"}
+          {record.status === "returned"
+            ? "Returned"
+            : record.status === "pending"
+            ? "Pending Approval"
+            : record.status === "rejected"
+            ? "Rejected"
+            : isOverdue
+            ? "Overdue"
+            : "Borrowed"}
         </span>
       </div>
 

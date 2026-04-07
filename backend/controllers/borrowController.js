@@ -10,7 +10,7 @@ const {
 } = require("../utils/emailTemplates");
 const { notifyNextInWaitlist } = require("./waitlistController");
 
-// @desc    Issue a book to a member
+// @desc    Request to borrow a book (pending admin approval)
 // @route   POST /api/borrow/issue
 // @access  Authenticated member
 exports.issueBook = catchAsyncErrors(async (req, res, next) => {
@@ -40,49 +40,116 @@ exports.issueBook = catchAsyncErrors(async (req, res, next) => {
     });
   }
 
-  // Check if user already has this book borrowed
+  // Check if user already has this book borrowed or pending
   const existingBorrow = await Borrow.findOne({
     user: req.user._id,
     book: bookId,
-    status: "borrowed",
+    status: { $in: ["borrowed", "pending"] },
   });
 
   if (existingBorrow) {
     return res.status(400).json({
       success: false,
-      message: "You already have this book borrowed",
+      message: existingBorrow.status === "pending"
+        ? "You already have a pending request for this book"
+        : "You already have this book borrowed",
     });
   }
 
   const issueDate = new Date();
-  // Return date is 14 days from now
   const returnDate = new Date(issueDate.getTime() + 14 * 24 * 60 * 60 * 1000);
 
-  // Create borrow record
+  // Create borrow record with pending status
   const borrow = await Borrow.create({
     user: req.user._id,
     book: bookId,
     issueDate,
     returnDate,
+    status: "pending",
   });
 
+  res.status(201).json({
+    success: true,
+    message: "Borrow request submitted! Waiting for admin approval.",
+    borrow,
+  });
+});
+
+// @desc    Approve a borrow request (Admin)
+// @route   PUT /api/borrow/approve/:id
+// @access  Admin only
+exports.approveRequest = catchAsyncErrors(async (req, res, next) => {
+  const borrow = await Borrow.findById(req.params.id).populate("book user");
+
+  if (!borrow) {
+    return res.status(404).json({
+      success: false,
+      message: "Borrow request not found",
+    });
+  }
+
+  if (borrow.status !== "pending") {
+    return res.status(400).json({
+      success: false,
+      message: `Cannot approve a request that is already ${borrow.status}`,
+    });
+  }
+
+  // Update status to borrowed
+  const issueDate = new Date();
+  const returnDate = new Date(issueDate.getTime() + 14 * 24 * 60 * 60 * 1000);
+  borrow.status = "borrowed";
+  borrow.issueDate = issueDate;
+  borrow.returnDate = returnDate;
+  await borrow.save();
+
   // Update book availability
-  await Book.findByIdAndUpdate(bookId, { availability: false });
+  await Book.findByIdAndUpdate(borrow.book._id, { availability: false });
 
   // Send confirmation email
   try {
     await sendEmail({
-      email: req.user.email,
+      email: borrow.user.email,
       subject: "Book Issued Successfully - Smart Library",
-      html: borrowConfirmTemplate(req.user.name, book.title, issueDate, returnDate),
+      html: borrowConfirmTemplate(borrow.user.name, borrow.book.title, issueDate, returnDate),
     });
   } catch (error) {
     console.error("Email sending failed:", error);
   }
 
-  res.status(201).json({
+  res.status(200).json({
     success: true,
-    message: "Book issued successfully",
+    message: "Borrow request approved successfully",
+    borrow,
+  });
+});
+
+// @desc    Reject a borrow request (Admin)
+// @route   PUT /api/borrow/reject/:id
+// @access  Admin only
+exports.rejectRequest = catchAsyncErrors(async (req, res, next) => {
+  const borrow = await Borrow.findById(req.params.id).populate("book user");
+
+  if (!borrow) {
+    return res.status(404).json({
+      success: false,
+      message: "Borrow request not found",
+    });
+  }
+
+  if (borrow.status !== "pending") {
+    return res.status(400).json({
+      success: false,
+      message: `Cannot reject a request that is already ${borrow.status}`,
+    });
+  }
+
+  borrow.status = "rejected";
+  await borrow.save();
+
+  res.status(200).json({
+    success: true,
+    message: "Borrow request rejected",
     borrow,
   });
 });

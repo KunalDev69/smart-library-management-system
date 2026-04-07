@@ -25,10 +25,10 @@ const BookDetail = () => {
   const handleBorrow = async () => {
     const result = await dispatch(issueBook(book._id));
     if (result.meta.requestStatus === "fulfilled") {
-      toast.success("Book borrowed successfully!");
+      toast.success("Borrow request submitted! Waiting for admin approval.");
       dispatch(getBookById(id));
     } else {
-      toast.error(result.payload || "Failed to borrow book");
+      toast.error(result.payload || "Failed to submit borrow request");
     }
   };
 

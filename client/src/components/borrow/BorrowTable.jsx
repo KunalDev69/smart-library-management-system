@@ -1,5 +1,5 @@
 // Table displaying borrow records
-const BorrowTable = ({ records, onReturn, showUser = true, isAdmin = false }) => {
+const BorrowTable = ({ records, onReturn, onApprove, onReject, showUser = true, isAdmin = false }) => {
   const formatDate = (date) => {
     return date ? new Date(date).toLocaleDateString("en-IN") : "N/A";
   };
@@ -19,7 +19,7 @@ const BorrowTable = ({ records, onReturn, showUser = true, isAdmin = false }) =>
             <th className="px-4 py-3 text-left font-semibold">Due Date</th>
             <th className="px-4 py-3 text-left font-semibold">Status</th>
             <th className="px-4 py-3 text-left font-semibold">Fine</th>
-            {onReturn && <th className="px-4 py-3 text-left font-semibold">Action</th>}
+            {(onReturn || onApprove) && <th className="px-4 py-3 text-left font-semibold">Action</th>}
           </tr>
         </thead>
         <tbody className="divide-y divide-gray-100 dark:divide-white/5">
@@ -46,6 +46,10 @@ const BorrowTable = ({ records, onReturn, showUser = true, isAdmin = false }) =>
                   className={`text-xs font-semibold px-2 py-1 rounded-full ${
                     record.status === "returned"
                       ? "bg-green-100 dark:bg-emerald-500/10 text-green-700 dark:text-emerald-400"
+                      : record.status === "pending"
+                      ? "bg-yellow-100 dark:bg-yellow-500/10 text-yellow-700 dark:text-yellow-400"
+                      : record.status === "rejected"
+                      ? "bg-red-100 dark:bg-red-500/10 text-red-700 dark:text-red-400"
                       : isOverdue(record.returnDate, record.status)
                       ? "bg-red-100 dark:bg-red-500/10 text-red-700 dark:text-red-400"
                       : "bg-blue-100 dark:bg-cyan-500/10 text-blue-700 dark:text-cyan-400"
@@ -53,6 +57,10 @@ const BorrowTable = ({ records, onReturn, showUser = true, isAdmin = false }) =>
                 >
                   {record.status === "returned"
                     ? "Returned"
+                    : record.status === "pending"
+                    ? "Pending Approval"
+                    : record.status === "rejected"
+                    ? "Rejected"
                     : isOverdue(record.returnDate, record.status)
                     ? "Overdue"
                     : "Borrowed"}
@@ -65,16 +73,34 @@ const BorrowTable = ({ records, onReturn, showUser = true, isAdmin = false }) =>
                   <span className="text-gray-400">₹0</span>
                 )}
               </td>
-              {onReturn && (
+              {(onReturn || onApprove) && (
                 <td className="px-4 py-3">
-                  {record.status === "borrowed" && (
-                    <button
-                      onClick={() => onReturn(record._id)}
-                      className="text-xs bg-green-600 text-white px-3 py-1.5 rounded-lg hover:bg-green-700 transition-colors"
-                    >
-                      Return
-                    </button>
-                  )}
+                  <div className="flex gap-2">
+                    {record.status === "pending" && onApprove && (
+                      <>
+                        <button
+                          onClick={() => onApprove(record._id)}
+                          className="text-xs bg-green-600 text-white px-3 py-1.5 rounded-lg hover:bg-green-700 transition-colors"
+                        >
+                          Approve
+                        </button>
+                        <button
+                          onClick={() => onReject(record._id)}
+                          className="text-xs bg-red-600 text-white px-3 py-1.5 rounded-lg hover:bg-red-700 transition-colors"
+                        >
+                          Reject
+                        </button>
+                      </>
+                    )}
+                    {record.status === "borrowed" && onReturn && (
+                      <button
+                        onClick={() => onReturn(record._id)}
+                        className="text-xs bg-green-600 text-white px-3 py-1.5 rounded-lg hover:bg-green-700 transition-colors"
+                      >
+                        Return
+                      </button>
+                    )}
+                  </div>
                 </td>
               )}
             </tr>

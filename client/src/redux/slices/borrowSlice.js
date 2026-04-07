@@ -75,6 +75,30 @@ export const returnByQR = createAsyncThunk(
   }
 );
 
+export const approveRequest = createAsyncThunk(
+  "borrow/approve",
+  async (borrowId, { rejectWithValue }) => {
+    try {
+      const { data } = await api.put(`/borrow/approve/${borrowId}`);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || "Failed to approve request");
+    }
+  }
+);
+
+export const rejectRequest = createAsyncThunk(
+  "borrow/reject",
+  async (borrowId, { rejectWithValue }) => {
+    try {
+      const { data } = await api.put(`/borrow/reject/${borrowId}`);
+      return data;
+    } catch (error) {
+      return rejectWithValue(error.response?.data?.message || "Failed to reject request");
+    }
+  }
+);
+
 // Borrow slice
 const borrowSlice = createSlice({
   name: "borrow",
@@ -169,6 +193,36 @@ const borrowSlice = createSlice({
         state.message = action.payload.message;
       })
       .addCase(returnByQR.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+
+    // Approve Request
+    builder
+      .addCase(approveRequest.pending, (state) => { state.loading = true; state.error = null; })
+      .addCase(approveRequest.fulfilled, (state, action) => {
+        state.loading = false;
+        state.message = action.payload.message;
+        state.records = state.records.map((rec) =>
+          rec._id === action.payload.borrow._id ? action.payload.borrow : rec
+        );
+      })
+      .addCase(approveRequest.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      });
+
+    // Reject Request
+    builder
+      .addCase(rejectRequest.pending, (state) => { state.loading = true; state.error = null; })
+      .addCase(rejectRequest.fulfilled, (state, action) => {
+        state.loading = false;
+        state.message = action.payload.message;
+        state.records = state.records.map((rec) =>
+          rec._id === action.payload.borrow._id ? action.payload.borrow : rec
+        );
+      })
+      .addCase(rejectRequest.rejected, (state, action) => {
         state.loading = false;
         state.error = action.payload;
       });

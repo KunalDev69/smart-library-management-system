@@ -21,6 +21,7 @@ const AdminDashboard = () => {
   }, [dispatch]);
 
   const issuedBooks = records.filter((r) => r.status === "borrowed").length;
+  const pendingRequests = records.filter((r) => r.status === "pending").length;
 
   const stats = [
     {
@@ -34,6 +35,12 @@ const AdminDashboard = () => {
       count: users.length,
       icon: <Users className="w-5 h-5" />,
       color: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/20",
+    },
+    {
+      title: "Pending Requests",
+      count: pendingRequests,
+      icon: <FileText className="w-5 h-5" />,
+      color: "bg-yellow-500/10 text-yellow-400 border border-yellow-500/20",
     },
     {
       title: "Books Issued",
