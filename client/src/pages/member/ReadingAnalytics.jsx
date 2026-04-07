@@ -117,8 +117,8 @@ const ReadingAnalytics = () => {
         >
           <div className="absolute inset-0 bg-gradient-to-r from-violet-500/10 to-cyan-500/5" />
           <div className="relative z-10">
-            <h1 className="font-heading text-2xl font-bold text-white">📊 My Reading Analytics</h1>
-            <p className="text-gray-400 mt-1">
+            <h1 className="font-heading text-2xl font-bold text-gray-900 dark:text-white">📊 My Reading Analytics</h1>
+            <p className="text-gray-500 dark:text-gray-400 mt-1">
               Insights into your reading journey
               {stats.favouriteCategory && (
                 <span>
@@ -151,14 +151,14 @@ const ReadingAnalytics = () => {
 
         {/* Reading Heatmap */}
         <div className="glass-card p-5 mb-8">
-          <h3 className="font-heading font-bold text-white mb-4">📅 Reading Activity</h3>
+          <h3 className="font-heading font-bold text-gray-900 dark:text-white mb-4">📅 Reading Activity</h3>
           <ReadingHeatmap />
         </div>
 
         {/* Charts row */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8">
           <div className="glass-card p-5">
-            <h3 className="font-heading font-bold text-white mb-4">Books Returned per Month</h3>
+            <h3 className="font-heading font-bold text-gray-900 dark:text-white mb-4">Books Returned per Month</h3>
             {stats.booksPerMonth.some((m) => m.count > 0) ? (
               <ResponsiveContainer width="100%" height={220}>
                 <BarChart data={stats.booksPerMonth}>
@@ -177,7 +177,7 @@ const ReadingAnalytics = () => {
           </div>
 
           <div className="glass-card p-5">
-            <h3 className="font-heading font-bold text-white mb-4">Reading by Category</h3>
+            <h3 className="font-heading font-bold text-gray-900 dark:text-white mb-4">Reading by Category</h3>
             {stats.categoryDistribution.length > 0 ? (
               <ResponsiveContainer width="100%" height={220}>
                 <PieChart>
@@ -212,7 +212,7 @@ const ReadingAnalytics = () => {
         {/* Top Authors */}
         {topAuthors.length > 0 && (
           <div className="glass-card p-5 mb-8">
-            <h3 className="font-heading font-bold text-white mb-4 flex items-center gap-2">
+            <h3 className="font-heading font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
               <User className="w-5 h-5 text-violet-400" />
               Your Top Authors
             </h3>
@@ -220,12 +220,12 @@ const ReadingAnalytics = () => {
               {topAuthors.map((author, i) => (
                 <div
                   key={i}
-                  className="bg-white/5 border border-white/5 rounded-xl p-3 text-center hover:bg-white/10 transition-all"
+                  className="bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/5 rounded-xl p-3 text-center hover:bg-gray-200 dark:hover:bg-white/10 transition-all"
                 >
                   <div className="w-10 h-10 mx-auto bg-violet-500/10 border border-violet-500/20 rounded-full flex items-center justify-center text-violet-400 font-bold text-sm mb-2">
                     {author.name?.charAt(0).toUpperCase()}
                   </div>
-                  <p className="text-sm font-semibold text-white truncate">
+                  <p className="text-sm font-semibold text-gray-900 dark:text-white truncate">
                     {author.name}
                   </p>
                   <p className="text-xs text-gray-500">
@@ -240,11 +240,11 @@ const ReadingAnalytics = () => {
         {/* Recent activity table */}
         {stats.recentActivity.length > 0 && (
           <div className="glass-card p-5">
-            <h3 className="font-heading font-bold text-white mb-4">Recent Activity</h3>
+            <h3 className="font-heading font-bold text-gray-900 dark:text-white mb-4">Recent Activity</h3>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
-                  <tr className="text-left text-gray-500 border-b border-white/5">
+                  <tr className="text-left text-gray-500 border-b border-gray-100 dark:border-white/5">
                     <th className="pb-3 pr-4">Book</th>
                     <th className="pb-3 pr-4">Category</th>
                     <th className="pb-3 pr-4">Issued</th>
@@ -253,10 +253,10 @@ const ReadingAnalytics = () => {
                     <th className="pb-3">Fine</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/5">
+                <tbody className="divide-y divide-gray-100 dark:divide-white/5">
                   {stats.recentActivity.map((a, i) => (
-                    <tr key={i} className="hover:bg-white/[0.02]">
-                      <td className="py-3 pr-4 font-medium text-white max-w-[180px] truncate">
+                    <tr key={i} className="hover:bg-gray-50 dark:hover:bg-white/[0.02]">
+                      <td className="py-3 pr-4 font-medium text-gray-900 dark:text-white max-w-[180px] truncate">
                         {a.bookTitle}
                       </td>
                       <td className="py-3 pr-4 text-gray-400">{a.category}</td>

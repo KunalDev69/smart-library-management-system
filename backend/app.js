@@ -54,7 +54,7 @@ app.use("/api/auth/", authLimiter);
 app.use(
   fileUpload({
     useTempFiles: true,
-    tempFileDir: "/tmp/",
+    tempFileDir: require("os").tmpdir(),
   })
 );
 

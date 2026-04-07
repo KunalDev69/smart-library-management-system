@@ -64,7 +64,7 @@ const startWaitlistProcessor = () => {
         console.log(`Waitlist processor: expired ${expired.length} unclaimed slot(s)`);
       }
     } catch (err) {
-      console.error("Waitlist processor error:", err);
+      console.error("Waitlist processor error:", err.message || err);
     }
   });
 

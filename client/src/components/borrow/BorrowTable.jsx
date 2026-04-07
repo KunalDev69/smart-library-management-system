@@ -10,9 +10,9 @@ const BorrowTable = ({ records, onReturn, showUser = true, isAdmin = false }) =>
 
   return (
     <div className="overflow-x-auto">
-      <table className="min-w-full bg-white rounded-xl shadow-sm border border-gray-100">
+      <table className="min-w-full bg-white dark:bg-surface-200 rounded-xl shadow-sm border border-gray-100 dark:border-white/10">
         <thead>
-          <tr className="bg-gray-50 text-gray-600 text-sm">
+          <tr className="bg-gray-50 dark:bg-white/[0.02] text-gray-600 dark:text-gray-400 text-sm">
             {showUser && <th className="px-4 py-3 text-left font-semibold">User</th>}
             <th className="px-4 py-3 text-left font-semibold">Book</th>
             <th className="px-4 py-3 text-left font-semibold">Issue Date</th>
@@ -22,22 +22,22 @@ const BorrowTable = ({ records, onReturn, showUser = true, isAdmin = false }) =>
             {onReturn && <th className="px-4 py-3 text-left font-semibold">Action</th>}
           </tr>
         </thead>
-        <tbody className="divide-y divide-gray-100">
+        <tbody className="divide-y divide-gray-100 dark:divide-white/5">
           {records.map((record) => (
-            <tr key={record._id} className="hover:bg-gray-50 transition-colors">
+            <tr key={record._id} className="hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors">
               {showUser && (
                 <td className="px-4 py-3 text-sm">
-                  <div className="font-medium text-gray-800">{record.user?.name}</div>
+                  <div className="font-medium text-gray-800 dark:text-white">{record.user?.name}</div>
                   <div className="text-gray-500 text-xs">{record.user?.email}</div>
                 </td>
               )}
               <td className="px-4 py-3 text-sm">
-                <div className="font-medium text-gray-800">{record.book?.title}</div>
+                <div className="font-medium text-gray-800 dark:text-white">{record.book?.title}</div>
                 <div className="text-gray-500 text-xs">{record.book?.author}</div>
               </td>
-              <td className="px-4 py-3 text-sm text-gray-600">{formatDate(record.issueDate)}</td>
+              <td className="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{formatDate(record.issueDate)}</td>
               <td className="px-4 py-3 text-sm">
-                <span className={isOverdue(record.returnDate, record.status) ? "text-red-600 font-medium" : "text-gray-600"}>
+                <span className={isOverdue(record.returnDate, record.status) ? "text-red-600 dark:text-red-400 font-medium" : "text-gray-600 dark:text-gray-400"}>
                   {formatDate(record.returnDate)}
                 </span>
               </td>
@@ -45,10 +45,10 @@ const BorrowTable = ({ records, onReturn, showUser = true, isAdmin = false }) =>
                 <span
                   className={`text-xs font-semibold px-2 py-1 rounded-full ${
                     record.status === "returned"
-                      ? "bg-green-100 text-green-700"
+                      ? "bg-green-100 dark:bg-emerald-500/10 text-green-700 dark:text-emerald-400"
                       : isOverdue(record.returnDate, record.status)
-                      ? "bg-red-100 text-red-700"
-                      : "bg-blue-100 text-blue-700"
+                      ? "bg-red-100 dark:bg-red-500/10 text-red-700 dark:text-red-400"
+                      : "bg-blue-100 dark:bg-cyan-500/10 text-blue-700 dark:text-cyan-400"
                   }`}
                 >
                   {record.status === "returned"

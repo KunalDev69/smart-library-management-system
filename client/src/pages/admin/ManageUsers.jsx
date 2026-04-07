@@ -51,13 +51,13 @@ const ManageUsers = () => {
     <div className="flex min-h-screen pt-16">
       <Sidebar />
       <div className="flex-1 p-8">
-        <h1 className="font-heading text-2xl font-bold text-white mb-8">Manage Users</h1>
+        <h1 className="font-heading text-2xl font-bold text-gray-900 dark:text-white mb-8">Manage Users</h1>
 
         <div className="glass-card overflow-hidden">
           <div className="overflow-x-auto">
             <table className="min-w-full">
               <thead>
-                <tr className="border-b border-white/5 text-gray-400 text-sm">
+                <tr className="border-b border-gray-100 dark:border-white/5 text-gray-500 dark:text-gray-400 text-sm">
                   <th className="px-6 py-4 text-left font-semibold">User</th>
                   <th className="px-6 py-4 text-left font-semibold">Email</th>
                   <th className="px-6 py-4 text-left font-semibold">Role</th>
@@ -66,9 +66,9 @@ const ManageUsers = () => {
                   <th className="px-6 py-4 text-left font-semibold">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5">
+              <tbody className="divide-y divide-gray-100 dark:divide-white/5">
                 {users.map((u) => (
-                  <tr key={u._id} className="hover:bg-white/[0.02] transition-colors">
+                  <tr key={u._id} className="hover:bg-gray-50 dark:hover:bg-white/[0.02] transition-colors">
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-3">
                         <div className="w-9 h-9 bg-violet-500/10 border border-violet-500/20 rounded-full flex items-center justify-center">
@@ -76,10 +76,10 @@ const ManageUsers = () => {
                             {u.name.charAt(0).toUpperCase()}
                           </span>
                         </div>
-                        <span className="font-medium text-white">{u.name}</span>
+                        <span className="font-medium text-gray-900 dark:text-white">{u.name}</span>
                       </div>
                     </td>
-                    <td className="px-6 py-4 text-sm text-gray-400">{u.email}</td>
+                    <td className="px-6 py-4 text-sm text-gray-500 dark:text-gray-400">{u.email}</td>
                     <td className="px-6 py-4">
                       <span
                         className={`text-xs font-semibold px-2 py-1 rounded-full ${

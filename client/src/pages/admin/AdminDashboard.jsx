@@ -55,7 +55,7 @@ const AdminDashboard = () => {
     <div className="flex min-h-screen pt-16">
       <Sidebar />
       <div className="flex-1 p-8">
-        <h1 className="font-heading text-2xl font-bold text-white mb-8">Admin Dashboard</h1>
+        <h1 className="font-heading text-2xl font-bold text-gray-900 dark:text-white mb-8">Admin Dashboard</h1>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
@@ -72,17 +72,17 @@ const AdminDashboard = () => {
 
         {/* Recent Activity */}
         <div className="glass-card p-6">
-          <h2 className="font-heading text-lg font-bold text-white mb-4">Recent Activity</h2>
+          <h2 className="font-heading text-lg font-bold text-gray-900 dark:text-white mb-4">Recent Activity</h2>
           {recentActivity.length > 0 ? (
             <div className="space-y-3">
               {recentActivity.map((record) => (
                 <div
                   key={record._id}
-                  className="flex items-center justify-between py-3 border-b border-white/5 last:border-0"
+                  className="flex items-center justify-between py-3 border-b border-gray-100 dark:border-white/5 last:border-0"
                 >
                   <div>
-                    <p className="font-medium text-white">{record.user?.name}</p>
-                    <p className="text-sm text-gray-400">
+                    <p className="font-medium text-gray-900 dark:text-white">{record.user?.name}</p>
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
                       {record.status === "borrowed" ? "Borrowed" : "Returned"} &quot;{record.book?.title}&quot;
                     </p>
                   </div>

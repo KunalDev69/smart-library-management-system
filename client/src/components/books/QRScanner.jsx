@@ -24,9 +24,9 @@ export const BookQRCode = ({ book }) => {
 
       {show && (
         <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl p-6 shadow-xl max-w-xs w-full text-center">
+          <div className="bg-white dark:bg-surface-100 rounded-2xl p-6 shadow-xl max-w-xs w-full text-center">
             <div className="flex justify-between items-center mb-4">
-              <h3 className="font-bold text-gray-800 text-lg">Book QR Code</h3>
+              <h3 className="font-bold text-gray-800 dark:text-white text-lg">Book QR Code</h3>
               <button
                 onClick={() => setShow(false)}
                 className="text-gray-400 hover:text-gray-600"
@@ -200,9 +200,9 @@ const QRScanner = ({ onClose }) => {
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4">
-      <div className="bg-white rounded-2xl shadow-xl max-w-md w-full p-6">
+      <div className="bg-white dark:bg-surface-100 rounded-2xl shadow-xl max-w-md w-full p-6">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-lg font-bold text-gray-800">📷 QR Issue / Return</h2>
+          <h2 className="text-lg font-bold text-gray-800 dark:text-white">📷 QR Issue / Return</h2>
           <button
             onClick={() => {
               stopCamera();
@@ -215,13 +215,13 @@ const QRScanner = ({ onClose }) => {
         </div>
 
         {/* Mode toggle */}
-        <div className="flex bg-gray-100 rounded-lg p-1 mb-4">
+        <div className="flex bg-gray-100 dark:bg-white/5 rounded-lg p-1 mb-4">
           <button
             onClick={() => setMode("issue")}
             className={`flex-1 py-2 text-sm font-semibold rounded-md transition-colors ${
               mode === "issue"
                 ? "bg-indigo-600 text-white"
-                : "text-gray-600 hover:text-gray-800"
+                : "text-gray-600 dark:text-gray-400 hover:text-gray-800"
             }`}
           >
             Issue Book
@@ -231,7 +231,7 @@ const QRScanner = ({ onClose }) => {
             className={`flex-1 py-2 text-sm font-semibold rounded-md transition-colors ${
               mode === "return"
                 ? "bg-green-600 text-white"
-                : "text-gray-600 hover:text-gray-800"
+                : "text-gray-600 dark:text-gray-400 hover:text-gray-800"
             }`}
           >
             Return Book
@@ -285,16 +285,16 @@ const QRScanner = ({ onClose }) => {
 
         <div className="relative mb-4">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-200" />
+            <div className="w-full border-t border-gray-200 dark:border-white/10" />
           </div>
           <div className="relative flex justify-center">
-            <span className="bg-white px-3 text-xs text-gray-400">
+            <span className="bg-white dark:bg-surface-100 px-3 text-xs text-gray-400">
               or enter manually
             </span>
           </div>
         </div>
 
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
           Book ID
         </label>
         <input
@@ -302,7 +302,7 @@ const QRScanner = ({ onClose }) => {
           value={manualId}
           onChange={(e) => setManualId(e.target.value)}
           placeholder="Paste book ID here…"
-          className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-indigo-400 outline-none mb-3"
+          className="w-full border border-gray-300 dark:border-white/10 rounded-lg px-3 py-2 text-sm bg-white dark:bg-surface-200 text-gray-950 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-indigo-400 outline-none mb-3"
           onKeyDown={(e) => e.key === "Enter" && handleManualAction()}
         />
         <button

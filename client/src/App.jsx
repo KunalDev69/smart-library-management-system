@@ -160,11 +160,17 @@ function App() {
             <Route
               path="*"
               element={
-                <div className="text-center py-24">
-                  <h1 className="text-6xl font-bold gradient-text font-heading">404</h1>
-                  <p className="text-gray-400 text-xl mt-4">Page not found</p>
-                  <a href="/" className="text-violet-400 hover:text-violet-300 hover:underline mt-4 inline-block transition-colors">
-                    Go Home
+                <div className="flex flex-col items-center justify-center min-h-[70vh] text-center px-4">
+                  <h1 className="text-8xl sm:text-9xl font-bold gradient-text font-heading">404</h1>
+                  <p className="text-gray-500 dark:text-gray-400 text-xl mt-4 mb-2">Oops! Page not found</p>
+                  <p className="text-gray-400 dark:text-gray-500 text-sm mb-8 max-w-md">
+                    The page you&apos;re looking for doesn&apos;t exist or has been moved.
+                  </p>
+                  <a
+                    href="/"
+                    className="inline-flex items-center gap-2 bg-gradient-to-r from-violet-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-violet-500 hover:to-indigo-500 transition-all"
+                  >
+                    Back to Home
                   </a>
                 </div>
               }

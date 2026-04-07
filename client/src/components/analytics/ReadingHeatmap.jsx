@@ -26,7 +26,7 @@ const ReadingHeatmap = () => {
   );
 
   const getColor = (count) => {
-    if (count === 0) return "bg-gray-100";
+    if (count === 0) return "bg-gray-100 dark:bg-gray-800";
     const ratio = count / maxCount;
     if (ratio <= 0.25) return "bg-indigo-200";
     if (ratio <= 0.5) return "bg-indigo-300";
@@ -148,8 +148,8 @@ const ReadingHeatmap = () => {
       {/* Legend */}
       <div className="flex items-center gap-1 mt-2 justify-end">
         <span className="text-[10px] text-gray-400">Less</span>
-        <div className="w-[13px] h-[13px] rounded-sm bg-gray-100" />
-        <div className="w-[13px] h-[13px] rounded-sm bg-indigo-200" />
+        <div className="w-[13px] h-[13px] rounded-sm bg-gray-100 dark:bg-gray-800" />
+        <div className="w-[13px] h-[13px] rounded-sm bg-indigo-200 dark:bg-indigo-200" />
         <div className="w-[13px] h-[13px] rounded-sm bg-indigo-300" />
         <div className="w-[13px] h-[13px] rounded-sm bg-indigo-500" />
         <div className="w-[13px] h-[13px] rounded-sm bg-indigo-700" />

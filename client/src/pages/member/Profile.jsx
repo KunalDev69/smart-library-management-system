@@ -39,7 +39,7 @@ const Profile = () => {
   return (
     <div className="min-h-screen pt-24 pb-16">
       <div className="max-w-2xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="font-heading text-2xl font-bold text-white mb-8">My Profile</h1>
+        <h1 className="font-heading text-2xl font-bold text-gray-950 dark:text-white mb-8">My Profile</h1>
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -51,20 +51,20 @@ const Profile = () => {
           <div className="relative p-8 text-center overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-br from-violet-500/10 to-cyan-500/10" />
             <div className="relative z-10">
-              <div className="w-24 h-24 bg-gradient-to-br from-violet-500/20 to-cyan-500/20 border border-white/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                <span className="text-4xl font-bold text-white">
+              <div className="w-24 h-24 bg-gradient-to-br from-violet-500/20 to-cyan-500/20 border border-gray-200 dark:border-white/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span className="text-4xl font-bold text-gray-950 dark:text-white">
                   {user?.name?.charAt(0).toUpperCase()}
                 </span>
               </div>
-              <h2 className="font-heading text-xl font-bold text-white">{user?.name}</h2>
-              <p className="text-gray-400 capitalize">{user?.role}</p>
+              <h2 className="font-heading text-xl font-bold text-gray-950 dark:text-white">{user?.name}</h2>
+              <p className="text-gray-500 dark:text-gray-400 capitalize">{user?.role}</p>
             </div>
           </div>
 
           {/* Profile Details */}
           <div className="p-8">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="font-semibold text-gray-300">Profile Information</h3>
+              <h3 className="font-semibold text-gray-600 dark:text-gray-300">Profile Information</h3>
               {!editing ? (
                 <button
                   onClick={() => setEditing(true)}
@@ -93,10 +93,10 @@ const Profile = () => {
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full px-4 py-2.5 bg-surface-200/80 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50 transition-all"
+                    className="w-full px-4 py-2.5 bg-white dark:bg-surface-200 border border-gray-300 dark:border-white/10 rounded-xl text-gray-950 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50 transition-all"
                   />
                 ) : (
-                  <p className="text-white font-medium py-2">{user?.name}</p>
+                  <p className="text-gray-950 dark:text-white font-medium py-2">{user?.name}</p>
                 )}
               </div>
 
@@ -104,7 +104,7 @@ const Profile = () => {
                 <label className="block text-sm text-gray-500 mb-1 flex items-center gap-1">
                   <Mail className="w-3.5 h-3.5 text-violet-400" /> Email
                 </label>
-                <p className="text-white font-medium py-2">{user?.email}</p>
+                <p className="text-gray-950 dark:text-white font-medium py-2">{user?.email}</p>
               </div>
 
               <div>
@@ -122,7 +122,7 @@ const Profile = () => {
 
               <div>
                 <label className="block text-sm text-gray-500 mb-1">Member Since</label>
-                <p className="text-white font-medium">
+                <p className="text-gray-950 dark:text-white font-medium">
                   {user?.createdAt ? new Date(user.createdAt).toLocaleDateString("en-IN", { year: "numeric", month: "long", day: "numeric" }) : "N/A"}
                 </p>
               </div>

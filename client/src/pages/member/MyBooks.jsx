@@ -66,11 +66,11 @@ const MyBooks = () => {
   return (
     <div className="min-h-screen pt-24 pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h1 className="font-heading text-2xl font-bold text-white mb-8">My Books</h1>
+        <h1 className="font-heading text-2xl font-bold text-gray-900 dark:text-white mb-8">My Books</h1>
 
         {/* Currently Borrowed */}
         <section className="mb-10">
-          <h2 className="text-lg font-semibold text-gray-300 mb-4">
+          <h2 className="text-lg font-semibold text-gray-600 dark:text-gray-300 mb-4">
             Currently Borrowed ({activeBorrows.length})
           </h2>
           {activeBorrows.length > 0 ? (
@@ -89,7 +89,7 @@ const MyBooks = () => {
         {/* Waitlist */}
         {myWaitlist.length > 0 && (
           <section className="mb-10">
-            <h2 className="text-lg font-semibold text-gray-300 mb-4 flex items-center gap-2">
+            <h2 className="text-lg font-semibold text-gray-600 dark:text-gray-300 mb-4 flex items-center gap-2">
               <Clock className="w-5 h-5 text-amber-400" />
               My Waitlist ({myWaitlist.length})
             </h2>
@@ -102,7 +102,7 @@ const MyBooks = () => {
                   <div className="flex-1 min-w-0">
                     <Link
                       to={`/books/${entry.book?._id}`}
-                      className="font-semibold text-white hover:text-violet-400 text-sm line-clamp-2 transition-colors"
+                      className="font-semibold text-gray-900 dark:text-white hover:text-violet-400 text-sm line-clamp-2 transition-colors"
                     >
                       {entry.book?.title}
                     </Link>
@@ -128,7 +128,7 @@ const MyBooks = () => {
 
         {/* Return History */}
         <section>
-          <h2 className="text-lg font-semibold text-gray-300 mb-4">
+          <h2 className="text-lg font-semibold text-gray-600 dark:text-gray-300 mb-4">
             Return History ({returnedBooks.length})
           </h2>
           {returnedBooks.length > 0 ? (

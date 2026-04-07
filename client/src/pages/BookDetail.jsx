@@ -64,6 +64,7 @@ const BookDetail = () => {
                 <img
                   src={book.coverImage}
                   alt={book.title}
+                  loading="lazy"
                   className="h-full w-full object-cover"
                 />
               ) : (
@@ -76,8 +77,8 @@ const BookDetail = () => {
               <span className="inline-block bg-violet-500/10 text-violet-400 text-xs font-medium px-3 py-1 rounded-full border border-violet-500/20 mb-3">
                 {book.category}
               </span>
-              <h1 className="font-heading text-2xl font-bold text-white mb-1">{book.title}</h1>
-              <p className="text-gray-400 mb-2">by <span className="font-medium text-gray-300">{book.author}</span></p>
+              <h1 className="font-heading text-2xl font-bold text-gray-900 dark:text-white mb-1">{book.title}</h1>
+              <p className="text-gray-500 dark:text-gray-400 mb-2">by <span className="font-medium text-gray-600 dark:text-gray-300">{book.author}</span></p>
 
               {/* Rating */}
               {book.totalReviews > 0 && (
@@ -91,7 +92,7 @@ const BookDetail = () => {
               <p className="text-xs text-gray-500 mb-4">ISBN: {book.ISBN}</p>
 
               {book.description && (
-                <p className="text-gray-400 text-sm leading-relaxed mb-6">{book.description}</p>
+                <p className="text-gray-500 dark:text-gray-400 text-sm leading-relaxed mb-6">{book.description}</p>
               )}
 
               {/* Availability & actions */}

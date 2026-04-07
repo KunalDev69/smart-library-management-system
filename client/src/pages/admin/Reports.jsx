@@ -59,7 +59,7 @@ const Reports = () => {
     <div className="flex min-h-screen pt-16">
       <Sidebar />
       <div className="flex-1 p-8">
-        <h1 className="font-heading text-2xl font-bold text-white mb-8">Reports & Analytics</h1>
+        <h1 className="font-heading text-2xl font-bold text-gray-900 dark:text-white mb-8">Reports & Analytics</h1>
 
         {/* Summary Stats */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
@@ -68,8 +68,8 @@ const Reports = () => {
               <div className={`${stat.color} inline-flex p-3 rounded-xl mb-3`}>
                 {stat.icon}
               </div>
-              <p className="text-sm text-gray-400">{stat.title}</p>
-              <p className="text-2xl font-bold text-white">{stat.value}</p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">{stat.title}</p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-white">{stat.value}</p>
             </div>
           ))}
         </div>
@@ -77,7 +77,7 @@ const Reports = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Fine Information */}
           <div className="glass-card p-6">
-            <h2 className="font-heading text-lg font-bold text-white mb-4">Fine Summary</h2>
+            <h2 className="font-heading text-lg font-bold text-gray-900 dark:text-white mb-4">Fine Summary</h2>
             <div className="space-y-4">
               <div className="flex justify-between items-center p-4 bg-emerald-500/5 border border-emerald-500/10 rounded-xl">
                 <div>
@@ -98,15 +98,15 @@ const Reports = () => {
 
           {/* Most Borrowed Books */}
           <div className="glass-card p-6">
-            <h2 className="font-heading text-lg font-bold text-white mb-4">Most Borrowed Books</h2>
+            <h2 className="font-heading text-lg font-bold text-gray-900 dark:text-white mb-4">Most Borrowed Books</h2>
             {mostBorrowed.length > 0 ? (
               <div className="space-y-3">
                 {mostBorrowed.map((book, index) => (
-                  <div key={index} className="flex items-center justify-between py-2 border-b border-white/5 last:border-0">
+                  <div key={index} className="flex items-center justify-between py-2 border-b border-gray-100 dark:border-white/5 last:border-0">
                     <div className="flex items-center gap-3">
                       <span className="text-violet-400 font-bold text-lg w-6">#{index + 1}</span>
                       <div>
-                        <p className="font-medium text-white text-sm">{book.title}</p>
+                        <p className="font-medium text-gray-900 dark:text-white text-sm">{book.title}</p>
                         <p className="text-xs text-gray-500">{book.author}</p>
                       </div>
                     </div>

@@ -125,7 +125,7 @@ const BookReviews = ({ bookId }) => {
 
   return (
     <div className="mt-6">
-      <h3 className="text-lg font-bold text-gray-800 mb-4">
+      <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4">
         Community Reviews
         {reviews.length > 0 && (
           <span className="ml-2 text-sm font-normal text-gray-500 inline-flex items-center gap-1.5">
@@ -140,9 +140,9 @@ const BookReviews = ({ bookId }) => {
       {isAuthenticated && canReview && (
         <form
           onSubmit={handleSubmit}
-          className="bg-indigo-50 rounded-xl p-4 mb-6 border border-indigo-100"
+          className="bg-indigo-50 dark:bg-indigo-500/10 rounded-xl p-4 mb-6 border border-indigo-100 dark:border-indigo-500/20"
         >
-          <p className="text-sm font-semibold text-indigo-700 mb-2">
+          <p className="text-sm font-semibold text-indigo-700 dark:text-indigo-400 mb-2">
             Rate & Review this book
           </p>
           <StarRating rating={rating} interactive onRate={setRating} />
@@ -152,7 +152,7 @@ const BookReviews = ({ bookId }) => {
             placeholder="Share your thoughts (optional)..."
             rows={3}
             maxLength={500}
-            className="w-full mt-3 p-2 text-sm border border-gray-200 rounded-lg focus:ring-2 focus:ring-indigo-400 outline-none resize-none"
+            className="w-full mt-3 p-2 text-sm border border-gray-200 dark:border-white/10 rounded-lg bg-white dark:bg-surface-200 text-gray-950 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:ring-2 focus:ring-indigo-400 outline-none resize-none"
           />
           <button
             type="submit"
@@ -180,14 +180,14 @@ const BookReviews = ({ bookId }) => {
           {reviews.map((r) => (
             <div
               key={r._id}
-              className="bg-white border border-gray-100 rounded-xl p-4 shadow-sm"
+              className="bg-white dark:bg-surface-200 border border-gray-100 dark:border-white/10 rounded-xl p-4 shadow-sm"
             >
               <div className="flex items-center gap-3 mb-1">
-                <div className="w-8 h-8 rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-bold text-sm">
+                <div className="w-8 h-8 rounded-full bg-indigo-100 dark:bg-indigo-500/10 flex items-center justify-center text-indigo-700 dark:text-indigo-400 font-bold text-sm">
                   {r.user?.name?.charAt(0).toUpperCase()}
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-gray-800">
+                  <p className="text-sm font-semibold text-gray-800 dark:text-white">
                     {r.user?.name}
                   </p>
                   <p className="text-xs text-gray-400">

@@ -17,9 +17,9 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="w-64 bg-surface-100 min-h-screen border-r border-white/5">
+    <aside className="w-64 bg-white dark:bg-surface-100 min-h-screen border-r border-gray-200 dark:border-white/5">
       <div className="p-6">
-        <h2 className="font-heading text-white font-bold text-lg mb-8">Admin Panel</h2>
+        <h2 className="font-heading text-gray-900 dark:text-white font-bold text-lg mb-8">Admin Panel</h2>
         <nav className="space-y-1">
           {navItems.map((item) => (
             <NavLink
@@ -28,8 +28,8 @@ const Sidebar = () => {
               className={({ isActive }) =>
                 `flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
                   isActive
-                    ? "bg-gradient-to-r from-violet-600/20 to-indigo-600/20 text-violet-400 border border-violet-500/20"
-                    : "text-gray-400 hover:text-white hover:bg-white/5"
+                    ? "bg-gradient-to-r from-violet-600/20 to-indigo-600/20 text-violet-600 dark:text-violet-400 border border-violet-500/20"
+                    : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5"
                 }`
               }
             >

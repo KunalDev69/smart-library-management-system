@@ -4,6 +4,7 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
@@ -18,11 +19,11 @@ export default {
           dark: '#0891B2',
         },
         surface: {
-          DEFAULT: '#0B0F1A',
-          100: '#0F1629',
-          200: '#131B33',
-          300: '#1A2340',
-          400: '#222D4D',
+          DEFAULT: 'var(--color-surface)',
+          100: 'var(--color-surface-100)',
+          200: 'var(--color-surface-200)',
+          300: 'var(--color-surface-300)',
+          400: 'var(--color-surface-400)',
         },
       },
       fontFamily: {
@@ -35,7 +36,7 @@ export default {
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-        'hero-gradient': 'linear-gradient(135deg, #0B0F1A 0%, #1A0B2E 50%, #0B0F1A 100%)',
+        'hero-gradient': 'var(--hero-gradient)',
       },
       boxShadow: {
         'glow-violet': '0 0 30px rgba(124, 58, 237, 0.3)',

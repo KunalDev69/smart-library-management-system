@@ -198,6 +198,7 @@ exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
       message: `Password reset link sent to ${user.email}`,
     });
   } catch (error) {
+    console.error("Email send error:", error);
     // Clear reset token if email fails
     user.resetPasswordToken = undefined;
     user.resetPasswordExpiry = undefined;

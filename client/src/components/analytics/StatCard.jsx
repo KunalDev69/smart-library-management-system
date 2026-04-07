@@ -6,11 +6,11 @@ import { FiTrendingUp, FiTrendingDown, FiMinus } from "react-icons/fi";
  * trendLabel: e.g. "+2 this month"
  */
 const StatCard = ({ icon, label, value, color, trend = null, trendLabel = "" }) => (
-  <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-5 flex items-center gap-4">
+  <div className="bg-white dark:bg-surface-200 rounded-xl shadow-sm border border-gray-100 dark:border-white/10 p-5 flex items-center gap-4">
     <div className={`${color} p-3 rounded-lg text-xl`}>{icon}</div>
     <div className="flex-1 min-w-0">
       <p className="text-xs text-gray-500">{label}</p>
-      <p className="text-2xl font-bold text-gray-800">{value}</p>
+      <p className="text-2xl font-bold text-gray-800 dark:text-white">{value}</p>
       {trend && (
         <div
           className={`flex items-center gap-1 mt-0.5 text-xs font-medium ${

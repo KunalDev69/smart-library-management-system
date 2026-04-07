@@ -1,105 +1,420 @@
 # 📚 Smart Library Management System (SLMS)
 
-A complete, production-ready **Smart Library Management System** built with the **MERN Stack** (MongoDB, Express.js, React.js, Node.js). This is a BCA Final Year Major Project featuring user authentication, book management, borrowing system, fine calculation, automated email notifications, AI-powered book recommendations, QR code issue/return, community reviews & ratings, a waitlist system with auto-notifications, and a personal reading analytics dashboard.
+A complete, production-ready **Smart Library Management System** built with the **MERN Stack** (MongoDB, Express.js, React.js, Node.js). This is a **BCA Final Year Major Project** featuring user authentication with email OTP verification, full book management with Cloudinary image uploads, an automated borrowing & return system with fine calculation, AI-powered book recommendations, QR code-based issue/return, community reviews & ratings, a waitlist system with auto-notifications, personal reading analytics with charts & heatmaps, and scheduled background tasks via cron jobs.
 
 ---
 
-## ✨ What's New — Advanced Features Added
+## 📑 Table of Contents
 
-The following 5 advanced features were recently added on top of the core system:
-
-| # | Feature | Description |
-|---|---------|-------------|
-| 1 | 🤖 **AI Recommendations** | Personalized book suggestions based on each member's borrow history and preferred categories |
-| 2 | 📱 **QR Code Issue/Return** | Every book gets a unique QR code; members and admins can scan to instantly issue or return without manual ID entry |
-| 3 | ⭐ **Book Reviews & Ratings** | Members who have returned a book can leave a star rating + comment; ratings are averaged and shown on every book card |
-| 4 | 🔔 **Waitlist & Auto-Assignment** | Members join a position-tracked queue for unavailable books; the next person in line is auto-emailed the moment the book is returned |
-| 5 | 📊 **Reading Analytics** | Personal dashboard with bar charts (books/month), category pie chart, on-time return rate, and reading streak |
+- [Project Overview](#-project-overview)
+- [Features](#-features)
+- [System Architecture](#-system-architecture)
+- [Tech Stack](#-tech-stack)
+- [Database Schema](#-database-schema)
+- [Authentication Flow](#-authentication-flow)
+- [Role-Based Access Control](#-role-based-access-control)
+- [AI Recommendation Engine](#-ai-recommendation-engine)
+- [Fine Calculation Logic](#-fine-calculation-logic)
+- [Background Cron Jobs](#-background-cron-jobs)
+- [Folder Structure](#-folder-structure)
+- [Setup & Installation](#-setup--installation)
+- [Environment Variables](#-environment-variables)
+- [Running the Project](#-running-the-project)
+- [API Endpoints](#-api-endpoints)
+- [Frontend Pages & Routes](#-frontend-pages--routes)
+- [Security Measures](#-security-measures)
+- [Screenshots](#-screenshots)
+- [Team Members](#-team-members)
+- [License](#-license)
 
 ---
 
-## 📋 Features
+## 🧾 Project Overview
 
-### 🔐 Authentication
-- User registration with **email OTP verification**
-- **JWT-based** login with httpOnly cookies
-- Forgot & Reset password via email link
+**Problem Statement:** Traditional library systems rely on manual book tracking, paper registers, and lack real-time features like automated fine calculation, overdue reminders, and digital book discovery. This leads to inefficiency, lost records, and poor user experience.
+
+**Our Solution:** SLMS is a web-based library management system that digitizes the complete library workflow — from book cataloging to issuing, returning, fine management, and analytics. It also introduces smart features like AI-powered book recommendations, QR code scanning, automated waitlists, and reading analytics dashboards.
+
+**Key Highlights:**
+- 🔐 Secure authentication with email OTP verification and JWT tokens
+- 📚 Complete book lifecycle management (add → borrow → return → review)
+- 🤖 AI-powered hybrid recommendation engine (content-based + collaborative filtering)
+- 📱 QR code generation for every book + camera-based QR scanning for instant returns
+- ⭐ Community-driven review and rating system
+- 🔔 Automated waitlist with 24-hour claim window and email notifications
+- 📊 Rich reading analytics with heatmaps, charts, streaks, and stat dashboards
+- ⏰ Background cron jobs for overdue reminders, unverified account cleanup, and waitlist processing
+- 🛡️ Enterprise-grade security: CSRF protection, rate limiting, HTTP-only cookies, password hashing
+
+---
+
+## ✨ Features
+
+### 🔐 1. Authentication & Authorization
+- User registration with **6-digit email OTP verification** (10-minute expiry)
+- **JWT-based** login with HTTP-only cookies (`SameSite=strict`)
+- Forgot password → email reset link with **15-minute expiry** (SHA-256 hashed token)
 - Role-based access control: **Admin** and **Member**
+- Automatic deletion of unverified accounts after 24 hours (cron job)
+- Session persistence via `GET /api/auth/me` on app load
 
-### 📚 Book Management (Admin)
-- Add, edit, and delete books
-- Upload book cover images via **Cloudinary**
-- **QR code automatically generated** for every book on creation (stored as a data URL)
-- Search books by title, author, or category
-- Pagination support
+### 📚 2. Book Management (Admin)
+- Add books with **cover image upload via Cloudinary**
+- Edit and delete book records
+- **QR code auto-generated** for every book on creation (stored as base64 data URL)
+- Regenerate QR codes on demand
+- Search books by **title, author, or category** (case-insensitive regex)
+- Server-side **pagination** with configurable page size
+- Track book availability status (auto-updated on borrow/return)
 
-### 📖 Borrowing System
-- Issue books to members (14-day return window)
-- Return books with automatic **fine calculation** (₹5/day overdue)
-- **Issue or return books by scanning QR code** (no manual ID entry needed)
-- Track all borrow/return history
-- View overdue records
+### 📖 3. Borrowing & Return System
+- Issue books to members with a **14-day lending period**
+- Return books with **automatic fine calculation** (₹5 per overdue day)
+- **QR code-based returns** — scan the book's QR code with your camera for instant return
+- Prevent duplicate borrows (can't borrow the same book twice simultaneously)
+- **Email confirmations** sent on both borrow and return
+- Admin can view **all borrow records** across the system
+- Members can view their **personal borrow history**
+- Admin can view **overdue records** with current fine amounts
 
-### 👥 User Management (Admin)
-- View all registered users
-- Promote/demote users between admin and member roles
-- Delete users
+### 👥 4. User Management (Admin)
+- View all registered users with details
+- **Promote** a member to admin or **demote** admin to member
+- Delete user accounts
+- View individual user profiles
 
-### 📧 Email Notifications
-- OTP verification email on registration
-- Borrow confirmation email
-- Return confirmation with fine details
-- **Daily overdue reminder emails** (Cron job at 9 AM)
-- **Automatic waitlist notification** when a reserved book becomes available
+### 📧 5. Email Notifications (6 Types)
+| Email | Trigger |
+|-------|---------|
+| OTP Verification | User registers a new account |
+| Password Reset Link | User requests "Forgot Password" |
+| Borrow Confirmation | Book is successfully issued to a member |
+| Return Confirmation | Book is returned (includes fine details if any) |
+| Overdue Reminder | Daily cron at 9 AM for all overdue books |
+| Waitlist Notification | A waitlisted book becomes available |
 
-### 📊 Reports & Analytics
-- Total books, users, borrows statistics
-- Fine collection summary
-- Most borrowed books list
+All emails use **branded HTML templates** with styled layouts.
 
-### 🤖 AI Book Recommendations
-- Content-based filtering using each member's borrow history
-- Surfaces highly-rated available books from the member's preferred categories
-- Falls back to top-rated books globally for new users with no history
-- Embedded in the Member Dashboard as a "Recommended For You" section
+### 🤖 6. AI-Powered Book Recommendations
+- **Hybrid recommendation engine** combining content-based and collaborative filtering
+- Scoring formula with weighted factors:
+  - **Category match: 40%** — books in the member's favourite categories
+  - **Popularity: 30%** — based on average rating
+  - **Recency: 15%** — recently added books get a boost
+  - **Author match: 15%** — books by authors the member has read before
+  - **Collaborative bonus: +15%** — books borrowed by users with similar reading patterns
+- Falls back to **popular books globally** for new users with no borrow history
+- Returns **top 10 personalized recommendations**
+- Displayed as a "Recommended For You" carousel on the Member Dashboard
 
-### ⭐ Book Reviews & Community Ratings
-- One review per user per book (enforced server-side)
-- Gated to users who have an actual returned borrow record for the book
-- Average rating and review count are denormalized on the Book document for fast reads
-- Star ratings are displayed on every BookCard and the Book Detail page
+### ⭐ 7. Book Reviews & Community Ratings
+- Members can leave a **1–5 star rating** with an optional text comment (max 500 chars)
+- **One review per user per book** (enforced with a unique database index)
+- **Review gating**: only users who have borrowed AND returned a book can review it
+- Average rating and review count are **denormalized on the Book document** for fast reads
+- Star ratings displayed on **every BookCard** in the catalog and on the **Book Detail** page
+- `can-review` API endpoint lets the frontend check eligibility before showing the review form
 
-### 🔔 Book Waitlist & Auto-Assignment
-- Position-ordered queue per book
-- Joining the waitlist is blocked when the book is available (direct borrow instead)
-- On every book return, the **next person in the queue is automatically emailed**
-- Members can view their queue position and leave the waitlist from My Books
+### 🔔 8. Book Waitlist & Auto-Assignment
+- Members can **join a position-tracked queue** for unavailable books
+- Joining is blocked when the book is already available (direct borrow instead)
+- Duplicate waitlist entries prevented (unique index on `book + user`)
+- When a book is returned, the **next person in line is automatically notified via email**
+- Notified member gets a **24-hour claim window** to borrow the book
+- If the window expires, the slot **auto-advances to the next person** (hourly cron job)
+- Members can **leave the waitlist** at any time (positions auto-reorder)
+- View queue position from the Book Detail page or My Books page
 
-### 📈 Personal Reading Analytics
-- Books read per month — 12-month bar chart (Recharts)
-- Category distribution — pie chart
-- On-time return rate
-- Recent reading activity table
-- Accessible via **My Analytics** link in the member navigation
+### 📊 9. Reading Analytics Dashboard
+- **Total stats**: books borrowed, returned, currently active, total fines paid
+- **On-time return rate** (percentage)
+- **Reading streak** — consecutive months with at least one book returned
+- **Monthly bar chart** — books read per month over the last 12 months (Recharts)
+- **Category pie chart** — distribution of books by genre/category
+- **365-day reading heatmap** — GitHub-style calendar showing daily borrow counts
+- **Top authors** — most-read authors list
+- **Recent activity timeline** — last 5 borrow/return events
+
+### 🖥️ 10. Admin Dashboard & Reports
+- **Admin summary**: total books, available books, total borrows, active borrows, overdue count
+- **Average rating** across all books in the system
+- **Top 5 most borrowed books** with borrow counts
+- Total reviews count
+- Manage Books, Manage Users, Borrow Records, and Reports pages
+
+---
+
+## 🏗️ System Architecture
+
+```
+┌─────────────────────┐        HTTP (REST API)        ┌───────────────────────┐
+│                     │  ◄──────────────────────────►  │                       │
+│   React Frontend    │     JWT Cookie Auth            │   Express Backend     │
+│   (Vite + Tailwind) │     Axios with credentials     │   (Node.js)           │
+│                     │                                │                       │
+│  • Redux Toolkit    │                                │  • Controllers        │
+│  • React Router v6  │                                │  • Mongoose Models    │
+│  • Recharts         │                                │  • Middlewares         │
+│  • Framer Motion    │                                │  • Cron Jobs          │
+│  • html5-qrcode     │                                │  • Email Service      │
+│                     │                                │                       │
+└─────────────────────┘                                └───────────┬───────────┘
+                                                                   │
+                                                    ┌──────────────┼──────────────┐
+                                                    │              │              │
+                                                    ▼              ▼              ▼
+                                              ┌──────────┐  ┌──────────┐  ┌──────────┐
+                                              │ MongoDB  │  │Cloudinary│  │  Gmail   │
+                                              │ Atlas    │  │  (CDN)   │  │  SMTP    │
+                                              │          │  │          │  │          │
+                                              │ Users    │  │ Book     │  │ OTP      │
+                                              │ Books    │  │ Cover    │  │ Reminders│
+                                              │ Borrows  │  │ Images   │  │ Receipts │
+                                              │ Reviews  │  │          │  │ Waitlist │
+                                              │ Waitlist │  │          │  │          │
+                                              └──────────┘  └──────────┘  └──────────┘
+```
 
 ---
 
 ## 🛠️ Tech Stack
 
-| Category | Technology |
-|----------|-----------|
-| **Frontend** | React.js (Vite), Tailwind CSS, Redux Toolkit |
-| **Backend** | Node.js, Express.js |
-| **Database** | MongoDB (Mongoose ODM) |
-| **Authentication** | JWT, bcryptjs, Cookie-parser |
-| **Email** | Nodemailer (Gmail SMTP) |
-| **Image Upload** | Cloudinary, express-fileupload |
-| **Scheduling** | node-cron |
-| **State Management** | Redux Toolkit, React-Redux |
-| **Routing** | React Router DOM v6 |
-| **Notifications** | react-hot-toast |
-| **QR Codes** | `qrcode` (backend generation), `qrcode.react` (frontend display) |
-| **Charts** | Recharts (bar chart, pie chart) |
+### Backend
+| Package | Version | Purpose |
+|---------|---------|---------|
+| **express** | ^4.19.2 | Web server framework — handles routing, middleware, and HTTP requests |
+| **mongoose** | ^8.4.1 | MongoDB ODM — defines schemas, models, and database queries |
+| **jsonwebtoken** | ^9.0.2 | Generates and verifies JWT tokens for authentication |
+| **bcryptjs** | ^2.4.3 | Hashes passwords with salt rounds before storing in database |
+| **nodemailer** | ^6.9.14 | Sends transactional emails (OTP, reminders, confirmations) via Gmail SMTP |
+| **cloudinary** | ^1.41.3 | Cloud image hosting service for book cover images |
+| **express-fileupload** | ^1.5.1 | Parses multipart file uploads (book cover images) |
+| **qrcode** | ^1.5.4 | Generates QR code images (Data URLs) encoding book IDs |
+| **node-cron** | ^3.0.3 | Schedules recurring background tasks (overdue reminders, cleanup) |
+| **express-rate-limit** | ^8.3.0 | Rate-limits API requests to prevent abuse (100 req/15min general, 20 req/15min auth) |
+| **cookie-parser** | ^1.4.6 | Parses cookies from incoming requests (JWT token extraction) |
+| **cors** | ^2.8.5 | Enables cross-origin requests from frontend with credentials |
+| **csrf-csrf** | ^4.0.3 | CSRF protection via Origin header validation |
+| **validator** | ^13.12.0 | Validates email format and input sanitization |
+| **dotenv** | ^16.4.5 | Loads environment variables from `.env` file |
+
+### Frontend
+| Package | Version | Purpose |
+|---------|---------|---------|
+| **react** | ^18.3.1 | UI component library — builds the entire user interface |
+| **react-dom** | ^18.3.1 | React DOM renderer for browser |
+| **react-router-dom** | ^6.24.0 | Client-side routing — handles page navigation without full reload |
+| **@reduxjs/toolkit** | ^2.2.6 | State management — manages global app state (auth, books, borrows, etc.) |
+| **react-redux** | ^9.1.2 | Connects React components to the Redux store |
+| **axios** | ^1.7.2 | HTTP client — makes API calls to the backend with cookie support |
+| **tailwindcss** | (dev) | Utility-first CSS framework — styles the entire UI |
+| **framer-motion** | ^12.38.0 | Animation library — smooth page transitions and component animations |
+| **recharts** | ^3.8.1 | Charting library — renders bar charts, pie charts in analytics |
+| **html5-qrcode** | ^2.3.8 | Camera-based QR code scanner — scans book QR codes for returns |
+| **qrcode.react** | ^4.2.0 | Renders QR codes as React SVG components |
+| **react-hot-toast** | ^2.4.1 | Toast notification popups for success/error messages |
+| **lucide-react** | ^1.7.0 | Modern icon library (primary icons) |
+| **react-icons** | ^5.2.1 | Additional icon set for UI elements |
+| **vite** | (dev) | Build tool — fast dev server with HMR and optimized production builds |
+
+---
+
+## 🗄️ Database Schema
+
+### User Model (`users` collection)
+| Field | Type | Constraints | Description |
+|-------|------|-------------|-------------|
+| `name` | String | Required, max 50 chars | User's full name |
+| `email` | String | Required, unique, validated | User's email address |
+| `password` | String | Required, min 6 chars, hashed | Bcrypt-hashed password (10 salt rounds) |
+| `role` | String | Enum: `admin`, `member` | Default: `member` |
+| `verified` | Boolean | Default: `false` | Set to `true` after OTP verification |
+| `otp` | Number | Transient | 6-digit OTP for email verification |
+| `otpExpiry` | Date | 10 min from generation | OTP expiration timestamp |
+| `resetPasswordToken` | String | SHA-256 hashed | Password reset token (hashed) |
+| `resetPasswordExpiry` | Date | 15 min from generation | Reset token expiration |
+| `avatar` | String | Default: `""` | Profile picture URL |
+| `createdAt` | Date | Default: `Date.now` | Account creation timestamp |
+
+### Book Model (`books` collection)
+| Field | Type | Constraints | Description |
+|-------|------|-------------|-------------|
+| `title` | String | Required | Book title |
+| `author` | String | Required | Author name |
+| `category` | String | Required | Genre/category (e.g., Fiction, Science) |
+| `ISBN` | String | Required, unique | International Standard Book Number |
+| `availability` | Boolean | Default: `true` | Whether the book can be borrowed |
+| `coverImage` | String | Cloudinary URL | Book cover image URL |
+| `description` | String | Default: `""` | Book description/summary |
+| `qrCode` | String | Auto-generated | QR code as base64 data URL |
+| `averageRating` | Number | 0–5, default: 0 | Denormalized average star rating |
+| `totalReviews` | Number | Default: 0 | Denormalized review count |
+| `createdAt` | Date | Default: `Date.now` | Book creation timestamp |
+
+### Borrow Model (`borrows` collection)
+| Field | Type | Constraints | Description |
+|-------|------|-------------|-------------|
+| `user` | ObjectId | Ref → User, required | Who borrowed the book |
+| `book` | ObjectId | Ref → Book, required | Which book was borrowed |
+| `issueDate` | Date | Default: `Date.now` | When the book was issued |
+| `returnDate` | Date | Required (issueDate + 14 days) | Due date for return |
+| `actualReturnDate` | Date | Null until returned | Actual date the book was returned |
+| `fine` | Number | Default: 0 | Fine amount in ₹ (₹5/day overdue) |
+| `status` | String | Enum: `borrowed`, `returned` | Current borrow status |
+
+### Review Model (`reviews` collection)
+| Field | Type | Constraints | Description |
+|-------|------|-------------|-------------|
+| `book` | ObjectId | Ref → Book, required | Book being reviewed |
+| `user` | ObjectId | Ref → User, required | User who wrote the review |
+| `rating` | Number | Required, 1–5 | Star rating |
+| `comment` | String | Max 500 chars | Optional review text |
+| `createdAt` | Date | Default: `Date.now` | Review timestamp |
+| *Index* | Unique | `{ book: 1, user: 1 }` | One review per user per book |
+
+### Waitlist Model (`waitlists` collection)
+| Field | Type | Constraints | Description |
+|-------|------|-------------|-------------|
+| `book` | ObjectId | Ref → Book, required | Book being waited for |
+| `user` | ObjectId | Ref → User, required | User in the queue |
+| `position` | Number | Required | Queue position (1 = first in line) |
+| `status` | String | Enum: `waiting`, `notified`, `fulfilled`, `expired`, `cancelled` | Entry status |
+| `expiresAt` | Date | Set on notification | 24-hour claim window deadline |
+| `createdAt` | Date | Default: `Date.now` | When user joined the queue |
+| *Index* | Unique | `{ book: 1, user: 1 }` | One entry per user per book |
+
+---
+
+## 🔐 Authentication Flow
+
+### Registration & Verification
+```
+User fills form ──► POST /api/auth/register ──► Password hashed (bcrypt, 10 rounds)
+                                               ──► User created (verified: false)
+                                               ──► 6-digit OTP generated
+                                               ──► OTP saved to DB (10-min expiry)
+                                               ──► OTP sent via email (Nodemailer)
+                                               ──► Redirect to OTP page
+
+User enters OTP ──► POST /api/auth/verify-otp ──► OTP matched & not expired?
+                                                ──► verified = true, clear OTP
+                                                ──► Generate JWT (7-day expiry)
+                                                ──► Set HTTP-only cookie (SameSite=strict)
+                                                ──► Redirect to Dashboard
+```
+
+### Login
+```
+User enters credentials ──► POST /api/auth/login ──► Find user by email
+                                                   ──► Compare password hash (bcrypt)
+                                                   ──► Check verified = true
+                                                   ──► Generate JWT → Set cookie
+                                                   ──► Return user object
+```
+
+### Password Reset
+```
+User requests reset ──► POST /api/auth/forgot-password ──► Generate 20-byte crypto token
+                                                         ──► SHA-256 hash stored in DB (15-min expiry)
+                                                         ──► Raw token sent via email in reset URL
+
+User clicks link ──► PUT /api/auth/reset-password/:token ──► Hash token from URL
+                                                          ──► Find matching user (not expired)
+                                                          ──► Update password, clear reset fields
+```
+
+### Session Persistence
+```
+App loads ──► GET /api/auth/me ──► JWT extracted from cookie
+                                ──► Token verified
+                                ──► User object returned
+                                ──► Redux store updated (isAuthenticated: true)
+```
+
+---
+
+## 👤 Role-Based Access Control
+
+### Admin Can:
+- ✅ Manage entire book catalog (CRUD operations)
+- ✅ Upload and manage book cover images
+- ✅ View and manage all registered users
+- ✅ Promote members to admin / demote admins to member
+- ✅ Delete user accounts
+- ✅ View ALL borrow records across the system
+- ✅ View overdue records with fine amounts
+- ✅ Access admin dashboard with system-wide analytics
+- ✅ Regenerate QR codes for books
+- ✅ Access reports page
+
+### Member Can:
+- ✅ Browse and search the book catalog
+- ✅ Borrow available books (1 copy at a time per book)
+- ✅ Return borrowed books (manual or QR scan)
+- ✅ View personal borrow history
+- ✅ Leave reviews on books they've returned
+- ✅ Join/leave waitlists for unavailable books
+- ✅ Claim waitlist slots within the 24-hour window
+- ✅ View personalized AI book recommendations
+- ✅ Access personal reading analytics dashboard
+- ✅ View and update their profile
+
+### Public (Not Logged In):
+- ✅ View home page and about/contact pages
+- ✅ Browse the book catalog (read-only)
+- ✅ View book details and reviews
+- ❌ Cannot borrow, review, or join waitlists
+
+---
+
+## 🤖 AI Recommendation Engine
+
+The system uses a **hybrid recommendation algorithm** that combines:
+
+1. **Content-Based Filtering** — analyzes the member's borrow history to find their favourite categories and authors
+2. **Collaborative Filtering** — finds users with similar reading patterns and recommends what they've read
+
+### Scoring Formula
+```
+Score = (CategoryBonus × 0.40) + (PopularityScore × 0.30) + (RecencyScore × 0.15) + (AuthorBonus × 0.15) + (CollaborativeBonus × 0.15)
+```
+
+| Factor | Weight | Logic |
+|--------|--------|-------|
+| **Category Match** | 40% | Book's category matches user's most-read categories |
+| **Popularity** | 30% | Based on the book's average star rating (0–5 normalized) |
+| **Recency** | 15% | Recently added books get a time-decay boost |
+| **Author Match** | 15% | Book's author matches authors the user has read before |
+| **Collaborative** | +15% | Books borrowed by users who share ≥2 common books |
+
+**New User Fallback:** If a user has no borrow history, the engine returns the top-rated, most-reviewed books globally.
+
+---
+
+## 💰 Fine Calculation Logic
+
+```
+Overdue Days = ceil((Actual Return Date − Due Date) / 86,400,000 ms)
+Fine = max(0, Overdue Days) × ₹5
+```
+
+- **Rate**: ₹5 per day overdue
+- **Rounding**: Days are rounded **up** (Math.ceil) — even 1 hour late = 1 day fine
+- **Trigger**: Fine is calculated at the moment of return
+- **Display**: Fine amount is shown on the return confirmation screen and included in the return email
+- **No fine**: If returned on or before the due date, fine = ₹0
+
+---
+
+## ⏰ Background Cron Jobs
+
+Three automated background tasks run on schedules:
+
+| Cron Job | Schedule | What It Does |
+|----------|----------|--------------|
+| **Overdue Reminders** | Daily at 9:00 AM | Finds all currently borrowed books past their due date, calculates the current fine for each, and sends an email reminder to the borrower |
+| **Unverified Account Cleanup** | Daily at 12:00 AM (midnight) | Deletes user accounts that remain `verified: false` for more than 24 hours, preventing database clutter from abandoned registrations |
+| **Waitlist Processor** | Every hour at :00 | Checks for waitlist entries in `notified` status whose 24-hour claim window has expired, marks them as `expired`, reorders remaining positions, and notifies the next person in line |
 
 ---
 
@@ -107,270 +422,421 @@ The following 5 advanced features were recently added on top of the core system:
 
 ```
 smart-library-management-system/
-├── backend/
+│
+├── backend/                          # Express.js REST API server
 │   ├── config/
-│   │   ├── config.env          # Environment variables
-│   │   └── db.js               # MongoDB connection
+│   │   └── db.js                     # MongoDB connection using Mongoose
 │   ├── controllers/
-│   │   ├── authController.js
-│   │   ├── bookController.js       # Includes QR code generation
-│   │   ├── borrowController.js
-│   │   ├── userController.js
-│   │   ├── reviewController.js     # ★ NEW — Book reviews & ratings
-│   │   ├── waitlistController.js   # ★ NEW — Waitlist queue management
-│   │   ├── recommendationController.js  # ★ NEW — AI recommendations
-│   │   └── analyticsController.js  # ★ NEW — Reading analytics
+│   │   ├── authController.js         # Register, login, OTP, password reset
+│   │   ├── bookController.js         # CRUD + QR code generation + search/pagination
+│   │   ├── borrowController.js       # Issue, return, QR return, overdue tracking
+│   │   ├── userController.js         # Admin user management (list, delete, role update)
+│   │   ├── reviewController.js       # Add review, get reviews, check eligibility
+│   │   ├── waitlistController.js     # Join/leave/claim waitlist, position tracking
+│   │   ├── recommendationController.js  # Hybrid AI recommendation engine
+│   │   └── analyticsController.js    # Stats, monthly data, heatmap, top authors, admin summary
 │   ├── models/
-│   │   ├── userModel.js
-│   │   ├── bookModel.js            # Updated: qrCode, averageRating, totalReviews fields
-│   │   ├── borrowModel.js
-│   │   ├── reviewModel.js          # ★ NEW
-│   │   └── waitlistModel.js        # ★ NEW
+│   │   ├── userModel.js              # User schema with OTP, password reset, roles
+│   │   ├── bookModel.js              # Book schema with QR code, ratings, availability
+│   │   ├── borrowModel.js            # Borrow schema with fine calculation, status tracking
+│   │   ├── reviewModel.js            # Review schema with unique user-book constraint
+│   │   └── waitlistModel.js          # Waitlist schema with position, status, expiry
 │   ├── routes/
-│   │   ├── authRoutes.js
-│   │   ├── bookRoutes.js
-│   │   ├── borrowRoutes.js
-│   │   ├── userRoutes.js
-│   │   ├── reviewRoutes.js         # ★ NEW
-│   │   ├── waitlistRoutes.js       # ★ NEW
-│   │   ├── recommendationRoutes.js # ★ NEW
-│   │   └── analyticsRoutes.js      # ★ NEW
+│   │   ├── authRoutes.js             # /api/auth/*
+│   │   ├── bookRoutes.js             # /api/books/*
+│   │   ├── borrowRoutes.js           # /api/borrow/*
+│   │   ├── userRoutes.js             # /api/users/*
+│   │   ├── reviewRoutes.js           # /api/reviews/*
+│   │   ├── waitlistRoutes.js         # /api/waitlist/*
+│   │   ├── recommendationRoutes.js   # /api/recommendations/*
+│   │   └── analyticsRoutes.js        # /api/analytics/*
 │   ├── middlewares/
-│   │   ├── authMiddleware.js
-│   │   ├── errorMiddleware.js
-│   │   ├── catchAsyncErrors.js
-│   │   └── csrfMiddleware.js
-│   ├── utils/
-│   │   ├── sendEmail.js
-│   │   ├── sendToken.js
-│   │   ├── fineCalculator.js
-│   │   ├── emailTemplates.js
-│   │   └── sendVerificationCode.js
+│   │   ├── authMiddleware.js         # JWT verification + role-based authorization
+│   │   ├── errorMiddleware.js        # Centralized error handler
+│   │   ├── catchAsyncErrors.js       # Async/await error wrapper (try-catch replacement)
+│   │   └── csrfMiddleware.js         # CSRF protection via Origin header validation
 │   ├── services/
-│   │   ├── notifyUsers.js
-│   │   └── removeUnverifiedAccounts.js
-│   ├── app.js
-│   ├── server.js
+│   │   ├── notifyUsers.js            # Cron: daily overdue email reminders (9 AM)
+│   │   ├── removeUnverifiedAccounts.js  # Cron: delete unverified users (midnight)
+│   │   └── waitlistProcessor.js      # Cron: process expired waitlist claims (hourly)
+│   ├── utils/
+│   │   ├── sendEmail.js              # Nodemailer SMTP email sender
+│   │   ├── sendToken.js              # JWT generation + cookie setting helper
+│   │   ├── sendVerificationCode.js   # OTP generation + email sending
+│   │   ├── fineCalculator.js         # Overdue fine calculation (₹5/day)
+│   │   └── emailTemplates.js         # Branded HTML email templates
+│   ├── app.js                        # Express app config (middleware, routes, CORS, rate limiting)
+│   ├── server.js                     # Server entry point (DB connect, Cloudinary config, cron start)
 │   └── package.json
-├── client/
+│
+├── client/                           # React.js SPA (Vite + Tailwind CSS)
 │   ├── src/
 │   │   ├── components/
-│   │   │   ├── layout/         # Navbar, Footer, Sidebar
-│   │   │   ├── common/         # Loader, ProtectedRoute, DashboardCard
+│   │   │   ├── layout/
+│   │   │   │   ├── Navbar.jsx        # Top navigation bar with auth state
+│   │   │   │   ├── Sidebar.jsx       # Admin sidebar navigation
+│   │   │   │   └── Footer.jsx        # Page footer
+│   │   │   ├── common/
+│   │   │   │   ├── ProtectedRoute.jsx  # Route guard (auth + role check)
+│   │   │   │   ├── Loader.jsx        # Loading spinner component
+│   │   │   │   └── DashboardCard.jsx # Stat card for dashboards
 │   │   │   ├── books/
-│   │   │   │   ├── BookCard.jsx    # Updated: star rating display, waitlist button
-│   │   │   │   ├── BookList.jsx
-│   │   │   │   ├── BookForm.jsx
-│   │   │   │   ├── BookReviews.jsx     # ★ NEW — Review form + reviews list
-│   │   │   │   ├── RecommendedBooks.jsx # ★ NEW — Recommendation carousel
-│   │   │   │   └── QRScanner.jsx       # ★ NEW — Camera QR scanner modal
-│   │   │   └── borrow/         # BorrowTable, BorrowCard
+│   │   │   │   ├── BookCard.jsx      # Book card with cover, rating, availability
+│   │   │   │   ├── BookList.jsx      # Grid layout of BookCards
+│   │   │   │   ├── BookForm.jsx      # Add/edit book form (admin)
+│   │   │   │   ├── BookReviews.jsx   # Review form + reviews list
+│   │   │   │   ├── RecommendedBooks.jsx  # AI recommendation carousel
+│   │   │   │   ├── WaitlistButton.jsx    # Join/leave/claim waitlist
+│   │   │   │   └── QRScanner.jsx     # Camera-based QR code scanner
+│   │   │   ├── borrow/
+│   │   │   │   ├── BorrowCard.jsx    # Individual borrow record card
+│   │   │   │   └── BorrowTable.jsx   # Borrow records table
+│   │   │   └── analytics/
+│   │   │       ├── ReadingHeatmap.jsx # 365-day GitHub-style heatmap
+│   │   │       └── StatCard.jsx      # Analytics stat card
 │   │   ├── pages/
-│   │   │   ├── admin/          # AdminDashboard, ManageBooks, ManageUsers, BorrowRecords, Reports
-│   │   │   ├── member/
-│   │   │   │   ├── MemberDashboard.jsx  # Updated: shows RecommendedBooks
-│   │   │   │   ├── MyBooks.jsx          # Updated: shows waitlist queue position
-│   │   │   │   ├── Profile.jsx
-│   │   │   │   └── ReadingAnalytics.jsx # ★ NEW — Charts & stats page
-│   │   │   └── (public pages)  # Home, Login, Register, etc.
+│   │   │   ├── Home.jsx              # Landing page with hero section
+│   │   │   ├── Login.jsx             # Login form page
+│   │   │   ├── Register.jsx          # Registration form page
+│   │   │   ├── VerifyOTP.jsx         # OTP entry page
+│   │   │   ├── ForgotPassword.jsx    # Reset request page
+│   │   │   ├── ResetPassword.jsx     # New password form
+│   │   │   ├── Catalog.jsx           # Public book catalog with search
+│   │   │   ├── BookDetail.jsx        # Full book detail + reviews
+│   │   │   ├── About.jsx             # About page
+│   │   │   ├── Contact.jsx           # Contact page
+│   │   │   ├── admin/
+│   │   │   │   ├── AdminDashboard.jsx   # Admin stats overview
+│   │   │   │   ├── ManageBooks.jsx      # Book CRUD interface
+│   │   │   │   ├── ManageUsers.jsx      # User management interface
+│   │   │   │   ├── BorrowRecords.jsx    # All borrow records
+│   │   │   │   └── Reports.jsx          # Reports & analytics
+│   │   │   └── member/
+│   │   │       ├── MemberDashboard.jsx  # Member overview + recommendations
+│   │   │       ├── MyBooks.jsx          # Personal borrows + waitlist
+│   │   │       ├── Profile.jsx          # Profile page
+│   │   │       └── ReadingAnalytics.jsx # Charts, heatmap, stats
 │   │   ├── redux/
-│   │   │   ├── store.js
+│   │   │   ├── store.js               # Redux store configuration
 │   │   │   └── slices/
-│   │   │       ├── authSlice.js
-│   │   │       ├── bookSlice.js
-│   │   │       ├── borrowSlice.js
-│   │   │       ├── userSlice.js
-│   │   │       ├── reviewSlice.js         # ★ NEW
-│   │   │       ├── waitlistSlice.js       # ★ NEW
-│   │   │       ├── recommendationSlice.js # ★ NEW
-│   │   │       └── analyticsSlice.js      # ★ NEW
-│   │   └── utils/
-│   │       └── api.js          # Axios instance
+│   │   │       ├── authSlice.js       # Authentication state & async thunks
+│   │   │       ├── bookSlice.js       # Books state (CRUD, search, pagination)
+│   │   │       ├── borrowSlice.js     # Borrow records state
+│   │   │       ├── userSlice.js       # User management state (admin)
+│   │   │       ├── reviewSlice.js     # Reviews state
+│   │   │       ├── waitlistSlice.js   # Waitlist state
+│   │   │       ├── recommendationSlice.js  # Recommendations state
+│   │   │       └── analyticsSlice.js  # Analytics data state
+│   │   ├── utils/
+│   │   │   └── api.js                 # Axios instance (baseURL + withCredentials)
+│   │   ├── App.jsx                    # Root component with routing
+│   │   ├── main.jsx                   # Entry point (Redux Provider, BrowserRouter)
+│   │   ├── App.css                    # Custom styles
+│   │   └── index.css                  # Tailwind base imports
+│   ├── index.html                     # HTML entry point
+│   ├── vite.config.js                 # Vite configuration
+│   ├── tailwind.config.js             # Tailwind CSS configuration
+│   ├── postcss.config.js              # PostCSS configuration
 │   └── package.json
-└── README.md
+│
+└── README.md                          # This file
 ```
 
 ---
 
-## 🚀 Setup Instructions
+## 🚀 Setup & Installation
 
 ### Prerequisites
-- Node.js (v18 or higher)
-- npm or yarn
-- MongoDB Atlas account (free tier works)
-- Gmail account with App Password enabled
-- Cloudinary account (free tier works)
 
----
+Before running this project, make sure you have:
 
-### Step 1: Clone the Repository
+| Requirement | How to Get It |
+|------------|---------------|
+| **Node.js v18+** | Download from [nodejs.org](https://nodejs.org/) |
+| **npm** (comes with Node.js) | Installed automatically with Node.js |
+| **MongoDB Atlas account** | Free at [mongodb.com/atlas](https://www.mongodb.com/atlas) |
+| **Gmail account with App Password** | See Gmail App Password Setup below |
+| **Cloudinary account** | Free at [cloudinary.com](https://cloudinary.com/) |
+
+### Step 1 — Clone the Repository
 
 ```bash
 git clone https://github.com/KunalDev69/smart-library-management-system.git
 cd smart-library-management-system
 ```
 
----
-
-### Step 2: Backend Setup
+### Step 2 — Backend Setup
 
 ```bash
 cd backend
 npm install
 ```
 
-Create `config/config.env` with your values:
+This installs all 14 backend dependencies listed in `package.json`.
+
+### Step 3 — Create Backend Environment File
+
+Create a file at `backend/config/config.env` and fill in your credentials:
 
 ```env
+# Server
 PORT=4000
-MONGO_URI=mongodb+srv://username:password@cluster.mongodb.net/slms
-JWT_SECRET=your_super_secret_jwt_key_here
+
+# MongoDB Atlas connection string
+MONGO_URI=mongodb+srv://<username>:<password>@<cluster>.mongodb.net/slms
+
+# JWT Configuration
+JWT_SECRET=your_super_secret_jwt_key_here_make_it_long_and_random
 JWT_EXPIRE=7d
 COOKIE_EXPIRE=7
+
+# Gmail SMTP (for sending emails)
 SMTP_HOST=smtp.gmail.com
 SMTP_PORT=465
 SMTP_SERVICE=gmail
 SMTP_MAIL=your_email@gmail.com
 SMTP_PASSWORD=your_gmail_app_password
+
+# Cloudinary (for book cover image uploads)
 CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
+
+# Frontend URL (for CORS)
 FRONTEND_URL=http://localhost:5173
 ```
 
-Start the backend server:
-```bash
-npm run dev
-```
-
-The backend runs on: `http://localhost:4000`
-
----
-
-### Step 3: Frontend Setup
+### Step 4 — Frontend Setup
 
 ```bash
 cd ../client
 npm install
-npm run dev
 ```
 
-The frontend runs on: `http://localhost:5173`
+This installs all 12 frontend dependencies.
+
+The frontend is pre-configured to call the backend at `http://localhost:4000/api` via the Axios instance in `src/utils/api.js`.
+
+### Step 5 — Setting Up External Services
+
+#### MongoDB Atlas (Database)
+1. Go to [mongodb.com/atlas](https://www.mongodb.com/atlas) → Create a free cluster
+2. Create a database user with a username and password
+3. Whitelist your IP address (or use `0.0.0.0/0` for development)
+4. Click "Connect" → "Connect your application" → Copy the connection string
+5. Replace `<username>`, `<password>`, and `<cluster>` in `MONGO_URI`
+
+#### Gmail App Password (Email)
+1. Go to [myaccount.google.com](https://myaccount.google.com/) → Security
+2. Enable **2-Step Verification** (required)
+3. Go to **App passwords** (search for it in Google Account settings)
+4. Select app: "Mail", device: "Other" → Name it "SLMS"
+5. Copy the 16-character password → Use as `SMTP_PASSWORD`
+
+#### Cloudinary (Image Upload)
+1. Go to [cloudinary.com](https://cloudinary.com/) → Sign up (free)
+2. From the Dashboard, copy:
+   - Cloud Name → `CLOUDINARY_CLOUD_NAME`
+   - API Key → `CLOUDINARY_API_KEY`
+   - API Secret → `CLOUDINARY_API_SECRET`
 
 ---
 
-### Step 4: Access the Application
+## ▶️ Running the Project
 
+### Start Backend Server
+```bash
+cd backend
+npm run dev
+```
+✅ Backend starts at: **http://localhost:4000**
+You should see:
+```
+Server is running on port 4000
+MongoDB Connected: <cluster-name>
+```
+
+### Start Frontend Dev Server
+Open a **new terminal** and run:
+```bash
+cd client
+npm run dev
+```
+✅ Frontend starts at: **http://localhost:5173**
+
+### Access the Application
 Open your browser and go to: **http://localhost:5173**
 
-**Default Admin Account** (create manually via MongoDB or promote a user):
-- Register an account, then update the role to "admin" in MongoDB Atlas
+### Creating an Admin Account
+1. Register a new account through the app (you'll receive an OTP email)
+2. Verify the OTP
+3. Go to **MongoDB Atlas** → Browse Collections → `users` collection
+4. Find your user document and change `"role": "member"` to `"role": "admin"`
+5. Refresh the app — you'll now see the Admin Dashboard
 
 ---
 
-## 🔑 Environment Variables Guide
+## 🔑 Environment Variables
 
-| Variable | Description |
-|----------|-------------|
-| `MONGO_URI` | MongoDB Atlas connection string |
-| `JWT_SECRET` | Secret key for JWT token signing (use a long random string) |
-| `JWT_EXPIRE` | JWT expiry duration (e.g., `7d`) |
-| `COOKIE_EXPIRE` | Cookie expiry in days (e.g., `7`) |
-| `SMTP_MAIL` | Gmail address for sending emails |
-| `SMTP_PASSWORD` | Gmail App Password (not your regular password) |
-| `CLOUDINARY_CLOUD_NAME` | Your Cloudinary cloud name |
-| `CLOUDINARY_API_KEY` | Cloudinary API key |
-| `CLOUDINARY_API_SECRET` | Cloudinary API secret |
-| `FRONTEND_URL` | Frontend URL for CORS (default: `http://localhost:5173`) |
-
-**Gmail App Password Setup:**
-1. Go to Google Account → Security
-2. Enable 2-Factor Authentication
-3. Go to App Passwords → Create a new app password
-4. Use this password as `SMTP_PASSWORD`
+| Variable | Required | Description |
+|----------|----------|-------------|
+| `PORT` | Yes | Backend server port (default: 4000) |
+| `MONGO_URI` | Yes | MongoDB Atlas connection string |
+| `JWT_SECRET` | Yes | Secret key for JWT signing (use a long random string) |
+| `JWT_EXPIRE` | Yes | JWT token expiry (e.g., `7d` for 7 days) |
+| `COOKIE_EXPIRE` | Yes | Cookie expiry in days (e.g., `7`) |
+| `SMTP_HOST` | Yes | Email server host (`smtp.gmail.com`) |
+| `SMTP_PORT` | Yes | Email server port (`465` for SSL) |
+| `SMTP_SERVICE` | Yes | Email service name (`gmail`) |
+| `SMTP_MAIL` | Yes | Your Gmail address |
+| `SMTP_PASSWORD` | Yes | Gmail App Password (16-char code, NOT your regular password) |
+| `CLOUDINARY_CLOUD_NAME` | Yes | Cloudinary cloud name |
+| `CLOUDINARY_API_KEY` | Yes | Cloudinary API key |
+| `CLOUDINARY_API_SECRET` | Yes | Cloudinary API secret |
+| `FRONTEND_URL` | Yes | Frontend URL for CORS (`http://localhost:5173`) |
 
 ---
 
 ## 📡 API Endpoints
 
-### Authentication
+### Authentication — `/api/auth`
 | Method | Endpoint | Description | Access |
 |--------|----------|-------------|--------|
-| POST | `/api/auth/register` | Register new user | Public |
-| POST | `/api/auth/verify-otp` | Verify email OTP | Public |
-| POST | `/api/auth/resend-otp` | Resend OTP | Public |
-| POST | `/api/auth/login` | Login | Public |
-| GET | `/api/auth/logout` | Logout | Private |
-| POST | `/api/auth/forgot-password` | Send password reset email | Public |
-| PUT | `/api/auth/reset-password/:token` | Reset password | Public |
-| GET | `/api/auth/me` | Get current user | Private |
+| POST | `/api/auth/register` | Register new user (sends OTP email) | Public |
+| POST | `/api/auth/verify-otp` | Verify email with 6-digit OTP | Public |
+| POST | `/api/auth/resend-otp` | Resend OTP if expired or not received | Public |
+| POST | `/api/auth/login` | Login with email + password | Public |
+| GET | `/api/auth/logout` | Clear JWT cookie and logout | Authenticated |
+| POST | `/api/auth/forgot-password` | Send password reset email with token | Public |
+| PUT | `/api/auth/reset-password/:token` | Reset password using email token | Public |
+| GET | `/api/auth/me` | Get currently logged-in user profile | Authenticated |
 
-### Books
+### Books — `/api/books`
 | Method | Endpoint | Description | Access |
 |--------|----------|-------------|--------|
-| GET | `/api/books` | Get all books (search + pagination) | Public |
-| GET | `/api/books/:id` | Get single book | Public |
-| POST | `/api/books` | Add new book (generates QR code) | Admin |
-| PUT | `/api/books/:id` | Update book | Admin |
-| DELETE | `/api/books/:id` | Delete book | Admin |
-| PUT | `/api/books/:id/regenerate-qr` | Regenerate book QR code | Admin |
+| GET | `/api/books` | Get all books (supports `?keyword=` and `?page=`) | Public |
+| GET | `/api/books/:id` | Get single book by ID | Public |
+| POST | `/api/books` | Add new book with cover image + auto QR | Admin |
+| PUT | `/api/books/:id` | Update book details | Admin |
+| DELETE | `/api/books/:id` | Delete book and its Cloudinary image | Admin |
+| PUT | `/api/books/:id/regenerate-qr` | Regenerate QR code for a book | Admin |
 
-### Borrowing
+### Borrowing — `/api/borrow`
 | Method | Endpoint | Description | Access |
 |--------|----------|-------------|--------|
-| POST | `/api/borrow/issue` | Issue a book | Member |
-| PUT | `/api/borrow/return/:id` | Return a book | Authenticated |
-| GET | `/api/borrow/records` | Get all borrow records | Admin |
-| GET | `/api/borrow/my-records` | Get my borrow records | Member |
-| GET | `/api/borrow/overdue` | Get overdue records | Admin |
+| POST | `/api/borrow/issue` | Issue/borrow a book (14-day period) | Authenticated |
+| PUT | `/api/borrow/return/:id` | Return a borrowed book (calculates fine) | Authenticated |
+| PUT | `/api/borrow/return-by-qr` | Return book by scanning its QR code | Authenticated |
+| GET | `/api/borrow/records` | Get all borrow records (system-wide) | Admin |
+| GET | `/api/borrow/my-records` | Get current user's borrow history | Authenticated |
+| GET | `/api/borrow/overdue` | Get all overdue borrow records | Admin |
 
-### Users
+### Users — `/api/users` (Admin Only)
 | Method | Endpoint | Description | Access |
 |--------|----------|-------------|--------|
-| GET | `/api/users` | Get all users | Admin |
-| GET | `/api/users/:id` | Get user by ID | Admin |
-| PUT | `/api/users/:id/role` | Update user role | Admin |
-| DELETE | `/api/users/:id` | Delete user | Admin |
+| GET | `/api/users` | Get all registered users | Admin |
+| GET | `/api/users/:id` | Get specific user by ID | Admin |
+| PUT | `/api/users/:id/role` | Change user role (admin ↔ member) | Admin |
+| DELETE | `/api/users/:id` | Delete a user account | Admin |
 
-### Reviews ★ NEW
+### Reviews — `/api/reviews`
 | Method | Endpoint | Description | Access |
 |--------|----------|-------------|--------|
-| POST | `/api/reviews/:bookId` | Add a review (must have returned book) | Member |
+| POST | `/api/reviews/:bookId` | Submit review (1–5 stars + comment) | Authenticated |
 | GET | `/api/reviews/:bookId` | Get all reviews for a book | Public |
-| GET | `/api/reviews/:bookId/can-review` | Check review eligibility | Authenticated |
+| GET | `/api/reviews/:bookId/can-review` | Check if user is eligible to review | Authenticated |
 
-### Waitlist ★ NEW
+### Waitlist — `/api/waitlist`
 | Method | Endpoint | Description | Access |
 |--------|----------|-------------|--------|
-| POST | `/api/waitlist/:bookId` | Join the waitlist | Member |
-| DELETE | `/api/waitlist/:bookId` | Leave the waitlist | Member |
-| GET | `/api/waitlist/:bookId/position` | Get current queue position | Member |
-| GET | `/api/waitlist/my-waitlist` | Get all waitlisted books | Member |
+| POST | `/api/waitlist/:bookId` | Join waitlist for an unavailable book | Authenticated |
+| DELETE | `/api/waitlist/:bookId` | Leave the waitlist | Authenticated |
+| GET | `/api/waitlist/:bookId/position` | Get your current position in queue | Authenticated |
+| GET | `/api/waitlist/my-waitlist` | Get all books you're waitlisted for | Authenticated |
+| POST | `/api/waitlist/:bookId/claim` | Claim a notified waitlist slot | Authenticated |
 
-### Recommendations ★ NEW
+### Recommendations — `/api/recommendations`
 | Method | Endpoint | Description | Access |
 |--------|----------|-------------|--------|
-| GET | `/api/recommendations` | Get personalized book recommendations | Authenticated |
+| GET | `/api/recommendations` | Get top 10 personalized book recommendations | Authenticated |
 
-### Analytics ★ NEW
+### Analytics — `/api/analytics`
 | Method | Endpoint | Description | Access |
 |--------|----------|-------------|--------|
-| GET | `/api/analytics/my-stats` | Get personal reading analytics | Authenticated |
-| GET | `/api/analytics/admin-summary` | Get admin-level analytics summary | Admin |
+| GET | `/api/analytics/my-stats` | Get personal reading summary (all stats) | Authenticated |
+| GET | `/api/analytics/monthly` | Get 12-month books-per-month data | Authenticated |
+| GET | `/api/analytics/categories` | Get category distribution breakdown | Authenticated |
+| GET | `/api/analytics/streak-calendar` | Get 365-day heatmap data (daily counts) | Authenticated |
+| GET | `/api/analytics/top-authors` | Get top 10 most-read authors | Authenticated |
+| GET | `/api/analytics/admin-summary` | Get system-wide admin dashboard stats | Admin |
+
+**Total: 35 API endpoints across 8 route groups**
+
+---
+
+## 🗺️ Frontend Pages & Routes
+
+| Route | Page | Auth Required | Role | Description |
+|-------|------|:---:|------|-------------|
+| `/` | Home | No | Any | Landing page with hero section, feature highlights |
+| `/login` | Login | No | — | Email + password login form |
+| `/register` | Register | No | — | Name + email + password registration form |
+| `/verify-otp` | VerifyOTP | No | — | 6-digit OTP input after registration |
+| `/forgot-password` | ForgotPassword | No | — | Enter email to receive reset link |
+| `/reset-password/:token` | ResetPassword | No | — | Enter new password via email link |
+| `/catalog` | Catalog | No | Any | Book grid with search, ratings, availability |
+| `/books/:id` | BookDetail | No | Any | Full book info, reviews, waitlist button |
+| `/about` | About | No | Any | About the project page |
+| `/contact` | Contact | No | Any | Contact information page |
+| `/admin/dashboard` | AdminDashboard | ✅ | Admin | System stats, top books, overdue count |
+| `/admin/books` | ManageBooks | ✅ | Admin | Add/edit/delete books, view QR codes |
+| `/admin/users` | ManageUsers | ✅ | Admin | View/delete users, change roles |
+| `/admin/borrow-records` | BorrowRecords | ✅ | Admin | All borrow/return records table |
+| `/admin/reports` | Reports | ✅ | Admin | Analytics reports and charts |
+| `/member/dashboard` | MemberDashboard | ✅ | Member | Overview + "Recommended For You" |
+| `/member/my-books` | MyBooks | ✅ | Member | Currently borrowed + waitlisted books |
+| `/member/profile` | Profile | ✅ | Any | User profile information |
+| `/member/analytics` | ReadingAnalytics | ✅ | Member | Charts, heatmap, streak, stats |
+
+---
+
+## 🛡️ Security Measures
+
+| Security Feature | Implementation |
+|-----------------|----------------|
+| **Password Hashing** | bcryptjs with 10 salt rounds — passwords are never stored in plain text |
+| **JWT Authentication** | Tokens stored in HTTP-only cookies (not accessible via JavaScript) |
+| **Cookie Security** | `SameSite=strict`, `httpOnly=true` — prevents XSS and CSRF cookie theft |
+| **CSRF Protection** | Origin header validation via `csrf-csrf` middleware |
+| **Rate Limiting** | 100 requests/15 min (general), 20 requests/15 min (auth routes) |
+| **Input Validation** | Email validation via `validator`, password minimum length, field limits |
+| **NoSQL Injection Prevention** | QR code return uses string type check to prevent object injection |
+| **Token Expiry** | JWT: 7 days, OTP: 10 minutes, Password reset: 15 minutes |
+| **Unverified Cleanup** | Auto-delete unverified accounts after 24 hours |
+| **CORS** | Restricted to frontend URL only, credentials required |
+| **Environment Variables** | All secrets stored in `.env` file, never committed to git |
 
 ---
 
 ## 📸 Screenshots
 
-*(Screenshots can be added after running the application)*
+> *Add screenshots of the running application here to showcase the UI*
 
-- Home Page - Hero section with features
-- Admin Dashboard - Statistics and recent activity
-- Book Catalog - Grid view with search, star ratings, and waitlist button
-- Member Dashboard - Borrow overview with "Recommended For You" section
-- Book Detail - Full review section with star rating input
-- Book Management - Table with add/edit/delete and QR code display
-- Reading Analytics - Bar chart, category pie chart, and reading stats
+| Page | Description |
+|------|-------------|
+| **Home Page** | Hero section with animated feature highlights |
+| **Book Catalog** | Grid view with search bar, star ratings, availability badges |
+| **Book Detail** | Full book info, cover image, QR code, reviews section |
+| **Admin Dashboard** | System-wide stats cards, top borrowed books |
+| **Manage Books** | Table with add/edit/delete actions, QR code display |
+| **Manage Users** | User list with role badges, promote/delete actions |
+| **Borrow Records** | Filterable table of all borrow/return transactions |
+| **Member Dashboard** | Personal stats + "Recommended For You" carousel |
+| **My Books** | Currently borrowed books with due dates + waitlist entries |
+| **Reading Analytics** | Bar chart, pie chart, 365-day heatmap, streak counter |
+| **QR Scanner** | Camera-based QR scanning modal for book returns |
+| **Login / Register** | Clean forms with validation messages |
+| **OTP Verification** | 6-digit OTP input with resend button |
 
 ---
 
@@ -381,7 +847,7 @@ Open your browser and go to: **http://localhost:5173**
 | **Aditya Pal** | 230302010307 |
 | **Kunal Panchal** | 230302010367 |
 
-**BCA Final Year Major Project**
+**BCA Final Year Major Project — Smart Library Management System**
 
 ---
 

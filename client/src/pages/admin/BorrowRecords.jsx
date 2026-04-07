@@ -64,7 +64,7 @@ const BorrowRecords = () => {
     <div className="flex min-h-screen pt-16">
       <Sidebar />
       <div className="flex-1 p-8">
-        <h1 className="font-heading text-2xl font-bold text-white mb-6">Borrow Records</h1>
+        <h1 className="font-heading text-2xl font-bold text-gray-900 dark:text-white mb-6">Borrow Records</h1>
 
         {/* Filter Tabs */}
         <div className="flex gap-2 mb-6 flex-wrap">
@@ -83,8 +83,8 @@ const BorrowRecords = () => {
                     ? "bg-red-500/20 text-red-400 border border-red-500/30"
                     : "bg-violet-500/20 text-violet-400 border border-violet-500/30"
                   : tab.danger
-                  ? "bg-red-500/5 text-red-400/60 hover:bg-red-500/10 border border-white/5"
-                  : "bg-white/5 text-gray-400 hover:bg-white/10 border border-white/5"
+                  ? "bg-red-500/5 text-red-400/60 hover:bg-red-500/10 border border-gray-200 dark:border-white/5"
+                  : "bg-gray-100 dark:bg-white/5 text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-white/10 border border-gray-200 dark:border-white/5"
               }`}
             >
               {tab.label}

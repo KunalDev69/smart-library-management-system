@@ -44,8 +44,8 @@ const MemberDashboard = () => {
         >
           <div className="absolute inset-0 bg-gradient-to-r from-violet-500/10 to-cyan-500/5" />
           <div className="relative z-10">
-            <h1 className="font-heading text-2xl font-bold text-white">Welcome back, {user?.name}! 👋</h1>
-            <p className="text-gray-400 mt-2">Here&apos;s your library activity overview.</p>
+            <h1 className="font-heading text-2xl font-bold text-gray-900 dark:text-white">Welcome back, {user?.name}! 👋</h1>
+            <p className="text-gray-500 dark:text-gray-400 mt-2">Here&apos;s your library activity overview.</p>
           </div>
         </motion.div>
 
@@ -63,8 +63,8 @@ const MemberDashboard = () => {
                 <stat.icon className="w-5 h-5" />
               </div>
               <div>
-                <p className="text-sm text-gray-400">{stat.label}</p>
-                <p className="text-2xl font-bold text-white">{stat.value}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">{stat.label}</p>
+                <p className="text-2xl font-bold text-gray-900 dark:text-white">{stat.value}</p>
               </div>
             </motion.div>
           ))}
@@ -86,7 +86,7 @@ const MemberDashboard = () => {
         {/* My Waitlist Section */}
         {myWaitlist.length > 0 && (
           <div className="glass-card p-6 mb-8">
-            <h2 className="font-heading text-lg font-bold text-white mb-4 flex items-center gap-2">
+            <h2 className="font-heading text-lg font-bold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
               <Clock className="w-5 h-5 text-amber-400" />
               My Waitlist ({myWaitlist.length})
             </h2>
@@ -94,7 +94,7 @@ const MemberDashboard = () => {
               {myWaitlist.map((entry) => (
                 <div
                   key={entry._id}
-                  className="flex items-center gap-3 bg-white/5 border border-white/5 rounded-xl p-3"
+                  className="flex items-center gap-3 bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/5 rounded-xl p-3"
                 >
                   <div className="h-12 w-10 bg-gradient-to-br from-violet-500/10 to-cyan-500/10 rounded flex items-center justify-center flex-shrink-0">
                     {entry.book?.coverImage ? (
@@ -110,7 +110,7 @@ const MemberDashboard = () => {
                   <div className="flex-1 min-w-0">
                     <Link
                       to={`/books/${entry.book?._id}`}
-                      className="text-sm font-semibold text-white hover:text-violet-400 truncate block transition-colors"
+                      className="text-sm font-semibold text-gray-900 dark:text-white hover:text-violet-400 truncate block transition-colors"
                     >
                       {entry.book?.title}
                     </Link>
@@ -140,8 +140,8 @@ const MemberDashboard = () => {
             className="glass-card p-6 hover:border-violet-500/20 transition-all flex items-center justify-between group"
           >
             <div>
-              <h3 className="font-bold text-white">My Borrowed Books</h3>
-              <p className="text-sm text-gray-400">View and manage your borrowed books</p>
+              <h3 className="font-bold text-gray-900 dark:text-white">My Borrowed Books</h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400">View and manage your borrowed books</p>
             </div>
             <ArrowRight className="w-5 h-5 text-violet-400 group-hover:translate-x-1 transition-transform" />
           </Link>
@@ -150,8 +150,8 @@ const MemberDashboard = () => {
             className="glass-card p-6 hover:border-violet-500/20 transition-all flex items-center justify-between group"
           >
             <div>
-              <h3 className="font-bold text-white">Browse Catalog</h3>
-              <p className="text-sm text-gray-400">Discover and borrow new books</p>
+              <h3 className="font-bold text-gray-900 dark:text-white">Browse Catalog</h3>
+              <p className="text-sm text-gray-500 dark:text-gray-400">Discover and borrow new books</p>
             </div>
             <ArrowRight className="w-5 h-5 text-violet-400 group-hover:translate-x-1 transition-transform" />
           </Link>
@@ -162,8 +162,8 @@ const MemberDashboard = () => {
             <div className="flex items-center gap-2">
               <BarChart2 className="w-5 h-5 text-cyan-400" />
               <div>
-                <h3 className="font-bold text-white">Reading Analytics</h3>
-                <p className="text-sm text-gray-400">See your reading stats &amp; charts</p>
+                <h3 className="font-bold text-gray-900 dark:text-white">Reading Analytics</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">See your reading stats &amp; charts</p>
               </div>
             </div>
             <ArrowRight className="w-5 h-5 text-violet-400 group-hover:translate-x-1 transition-transform" />

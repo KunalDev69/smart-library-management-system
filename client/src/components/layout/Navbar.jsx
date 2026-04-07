@@ -4,8 +4,9 @@ import { logout } from "../../redux/slices/authSlice";
 import toast from "react-hot-toast";
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { BookOpen, LogOut, Menu, X, BarChart2, Camera } from "lucide-react";
+import { BookOpen, LogOut, Menu, X, BarChart2, Camera, Sun, Moon } from "lucide-react";
 import QRScanner from "../books/QRScanner";
+import { useTheme } from "../../context/ThemeContext";
 
 const Navbar = () => {
   const dispatch = useDispatch();
@@ -15,6 +16,7 @@ const Navbar = () => {
   const [menuOpen, setMenuOpen] = useState(false);
   const [showQR, setShowQR] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { darkMode, toggleTheme } = useTheme();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -44,7 +46,7 @@ const Navbar = () => {
       transition={{ duration: 0.6, ease: "easeOut" }}
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled
-          ? "bg-surface-100/80 backdrop-blur-xl shadow-lg shadow-black/20 border-b border-white/5"
+          ? "bg-white/80 dark:bg-surface-100/80 backdrop-blur-xl shadow-lg shadow-black/5 dark:shadow-black/20 border-b border-gray-200/50 dark:border-white/5"
           : "bg-transparent"
       }`}
     >
@@ -56,8 +58,8 @@ const Navbar = () => {
               <div className="absolute inset-0 bg-violet-500/30 blur-lg rounded-full group-hover:bg-violet-500/50 transition-all" />
               <BookOpen className="relative w-7 h-7 text-violet-400" />
             </div>
-            <span className="font-heading font-bold text-lg text-white tracking-tight">
-              Smart<span className="text-violet-400">Library</span>
+            <span className="font-heading font-bold text-lg text-gray-900 dark:text-white tracking-tight">
+              Smart<span className="text-violet-600 dark:text-violet-400">Library</span>
             </span>
           </Link>
 
@@ -69,8 +71,8 @@ const Navbar = () => {
                 to={link.to}
                 className={`relative px-4 py-2 text-sm font-medium rounded-lg transition-all duration-300 ${
                   isActive(link.to)
-                    ? "text-white"
-                    : "text-gray-400 hover:text-white"
+                    ? "text-gray-900 dark:text-white"
+                    : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
                 }`}
               >
                 {link.label}
@@ -85,8 +87,19 @@ const Navbar = () => {
             ))}
           </div>
 
-          {/* Auth Buttons */}
+          {/* Auth Buttons + Theme Toggle */}
           <div className="hidden md:flex items-center gap-3">
+            {/* Theme Toggle */}
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={toggleTheme}
+              className="p-2 rounded-lg bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-400 hover:text-violet-600 dark:hover:text-violet-400 transition-all"
+              title={darkMode ? "Switch to Light Mode" : "Switch to Dark Mode"}
+            >
+              {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </motion.button>
+
             {isAuthenticated ? (
               <>
                 {user?.role === "admin" ? (
@@ -121,8 +134,8 @@ const Navbar = () => {
                     </button>
                   </>
                 )}
-                <div className="w-px h-5 bg-white/10" />
-                <span className="text-sm text-gray-400 font-medium">{user?.name}</span>
+                <div className="w-px h-5 bg-gray-200 dark:bg-white/10" />
+                <span className="text-sm text-gray-600 dark:text-gray-400 font-medium">{user?.name}</span>
                 <motion.button
                   whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
@@ -136,7 +149,7 @@ const Navbar = () => {
               <>
                 <Link
                   to="/login"
-                  className="text-sm text-gray-300 hover:text-white font-medium px-4 py-2 transition-colors"
+                  className="text-sm text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white font-medium px-4 py-2 transition-colors"
                 >
                   Login
                 </Link>
@@ -153,12 +166,22 @@ const Navbar = () => {
           </div>
 
           {/* Mobile menu toggle */}
-          <button
-            className="md:hidden text-gray-400 hover:text-white transition-colors"
-            onClick={() => setMenuOpen(!menuOpen)}
-          >
-            {menuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
+          <div className="flex md:hidden items-center gap-2">
+            <motion.button
+              whileHover={{ scale: 1.1 }}
+              whileTap={{ scale: 0.9 }}
+              onClick={toggleTheme}
+              className="p-2 rounded-lg bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-600 dark:text-gray-400 transition-all"
+            >
+              {darkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+            </motion.button>
+            <button
+              className="text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+              onClick={() => setMenuOpen(!menuOpen)}
+            >
+              {menuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
+          </div>
         </div>
 
         {/* Mobile Menu */}
@@ -171,7 +194,7 @@ const Navbar = () => {
               transition={{ duration: 0.3 }}
               className="md:hidden overflow-hidden"
             >
-              <div className="pb-4 pt-2 space-y-1 border-t border-white/5">
+              <div className="pb-4 pt-2 space-y-1 border-t border-gray-200 dark:border-white/5">
                 {navLinks.map((link) => (
                   <Link
                     key={link.to}
@@ -179,8 +202,8 @@ const Navbar = () => {
                     onClick={() => setMenuOpen(false)}
                     className={`block py-2.5 px-3 rounded-lg text-sm font-medium transition-all ${
                       isActive(link.to)
-                        ? "text-white bg-white/5"
-                        : "text-gray-400 hover:text-white hover:bg-white/5"
+                        ? "text-gray-900 dark:text-white bg-gray-100 dark:bg-white/5"
+                        : "text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-white/5"
                     }`}
                   >
                     {link.label}
@@ -224,7 +247,7 @@ const Navbar = () => {
                     <Link
                       to="/login"
                       onClick={() => setMenuOpen(false)}
-                      className="flex-1 text-center py-2.5 text-sm text-gray-300 border border-white/10 rounded-xl font-medium"
+                      className="flex-1 text-center py-2.5 text-sm text-gray-600 dark:text-gray-300 border border-gray-200 dark:border-white/10 rounded-xl font-medium"
                     >
                       Login
                     </Link>

@@ -53,7 +53,7 @@ const RecommendedBooks = () => {
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
           <FiStar className="text-yellow-500 text-xl" />
-          <h2 className="text-xl font-bold text-gray-800">
+          <h2 className="text-xl font-bold text-gray-800 dark:text-white">
             Recommended for You
           </h2>
           {favouriteCategories.length > 0 && (
@@ -65,14 +65,14 @@ const RecommendedBooks = () => {
         <div className="flex gap-2">
           <button
             onClick={() => scroll("left")}
-            className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+            className="p-2 rounded-full bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 transition-colors"
             aria-label="Scroll left"
           >
             <FiChevronLeft />
           </button>
           <button
             onClick={() => scroll("right")}
-            className="p-2 rounded-full bg-gray-100 hover:bg-gray-200 transition-colors"
+            className="p-2 rounded-full bg-gray-100 dark:bg-white/5 hover:bg-gray-200 dark:hover:bg-white/10 transition-colors"
             aria-label="Scroll right"
           >
             <FiChevronRight />
@@ -89,7 +89,7 @@ const RecommendedBooks = () => {
         {recommendations.map((book) => (
           <div
             key={book._id}
-            className="min-w-[220px] max-w-[220px] bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow flex-shrink-0 relative"
+            className="min-w-[220px] max-w-[220px] bg-white dark:bg-surface-200 rounded-xl shadow-sm border border-gray-100 dark:border-white/10 overflow-hidden hover:shadow-md transition-shadow flex-shrink-0 relative"
           >
             {/* Match % badge */}
             {book.matchScore > 0 && (
@@ -104,6 +104,7 @@ const RecommendedBooks = () => {
                   <img
                     src={book.coverImage}
                     alt={book.title}
+                    loading="lazy"
                     className="h-full w-full object-cover"
                   />
                 ) : (
@@ -113,10 +114,10 @@ const RecommendedBooks = () => {
             </Link>
 
             <div className="p-3">
-              <span className="text-xs text-indigo-600 font-medium">
+              <span className="text-xs text-indigo-600 dark:text-indigo-400 font-medium">
                 {book.category}
               </span>
-              <h4 className="text-sm font-bold text-gray-800 leading-tight mt-0.5 line-clamp-2">
+              <h4 className="text-sm font-bold text-gray-800 dark:text-white leading-tight mt-0.5 line-clamp-2">
                 <Link to={`/books/${book._id}`} className="hover:text-indigo-600">
                   {book.title}
                 </Link>

@@ -133,10 +133,10 @@ const Home = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 mb-8 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm"
+              className="inline-flex items-center gap-2 px-4 py-1.5 mb-8 rounded-full bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 backdrop-blur-sm"
             >
               <Sparkles className="w-4 h-4 text-violet-400" />
-              <span className="text-sm text-gray-300 font-medium">
+              <span className="text-sm text-gray-600 dark:text-gray-300 font-medium">
                 AI-Powered Library Management
               </span>
             </motion.div>
@@ -146,7 +146,7 @@ const Home = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.15 }}
-              className="font-heading text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight mb-7"
+              className="font-heading text-5xl sm:text-6xl lg:text-7xl font-bold leading-[1.1] tracking-tight mb-7 text-gray-900 dark:text-white"
             >
               The Future of{" "}
               <span className="gradient-text">Library</span>
@@ -159,7 +159,7 @@ const Home = () => {
               initial={{ opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.3 }}
-              className="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed"
+              className="text-lg sm:text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto mb-10 leading-relaxed"
             >
               A complete digital platform to manage your library seamlessly. Track books,
               manage members, automate notifications — all powered by intelligent AI.
@@ -194,7 +194,7 @@ const Home = () => {
                   <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
                     <Link
                       to="/login"
-                      className="inline-flex items-center gap-2 bg-white/5 border border-white/10 text-white px-8 py-3.5 rounded-xl font-semibold hover:bg-white/10 transition-all backdrop-blur-sm text-base"
+                      className="inline-flex items-center gap-2 bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-800 dark:text-white px-8 py-3.5 rounded-xl font-semibold hover:bg-gray-200 dark:hover:bg-white/10 transition-all backdrop-blur-sm text-base"
                     >
                       Sign In
                     </Link>
@@ -204,7 +204,7 @@ const Home = () => {
               <motion.div whileHover={{ scale: 1.03 }} whileTap={{ scale: 0.97 }}>
                 <Link
                   to="/catalog"
-                  className="inline-flex items-center gap-2 bg-white/5 border border-white/10 text-white px-8 py-3.5 rounded-xl font-semibold hover:bg-white/10 transition-all backdrop-blur-sm text-base"
+                  className="inline-flex items-center gap-2 bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 text-gray-800 dark:text-white px-8 py-3.5 rounded-xl font-semibold hover:bg-gray-200 dark:hover:bg-white/10 transition-all backdrop-blur-sm text-base"
                 >
                   Browse Catalog
                 </Link>
@@ -232,7 +232,7 @@ const Home = () => {
         </div>
 
         {/* Bottom fade */}
-        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-surface to-transparent" />
+        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[var(--color-surface)] to-transparent" />
       </section>
 
       {/* ═══════════════ FEATURES SECTION ═══════════════ */}
@@ -242,10 +242,10 @@ const Home = () => {
             <span className="inline-block text-sm font-semibold text-violet-400 tracking-wider uppercase mb-4">
               Features
             </span>
-            <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-5">
+            <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-5">
               Everything You Need
             </h2>
-            <p className="text-gray-400 text-lg max-w-2xl mx-auto">
+            <p className="text-gray-500 dark:text-gray-400 text-lg max-w-2xl mx-auto">
               Powerful features designed for modern, efficient library management.
             </p>
           </FadeInSection>
@@ -253,36 +253,22 @@ const Home = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8">
             {features.map((feature, index) => (
               <FadeInSection key={index} delay={index * 0.15}>
-                <motion.div
-                  whileHover={{ y: -8, scale: 1.02 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                  className="group relative glass-card p-8 lg:p-10 h-full"
+                <div
+                  className="group bg-white dark:bg-surface-200 border border-gray-200 dark:border-white/10 rounded-2xl p-8 lg:p-10 h-full hover:border-violet-300 dark:hover:border-violet-500/30 hover:shadow-lg dark:hover:shadow-violet-500/5 transition-all duration-300"
                 >
-                  {/* Glow effect on hover */}
                   <div
-                    className={`absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 bg-gradient-to-br ${feature.gradient} blur-xl -z-10 scale-[0.8]`}
-                  />
-                  <div
-                    className={`absolute inset-0 rounded-3xl opacity-0 group-hover:opacity-[0.05] transition-opacity duration-500 bg-gradient-to-br ${feature.gradient}`}
-                  />
-
-                  <div
-                    className={`inline-flex p-3 rounded-xl bg-gradient-to-br ${feature.gradient} mb-6 shadow-lg`}
+                    className={`inline-flex p-3 rounded-xl bg-gradient-to-br ${feature.gradient} mb-6`}
                   >
                     <feature.icon className="w-6 h-6 text-white" />
                   </div>
 
-                  <h3 className="font-heading text-xl font-bold text-white mb-3">
+                  <h3 className="font-heading text-xl font-bold text-gray-900 dark:text-white mb-3">
                     {feature.title}
                   </h3>
-                  <p className="text-gray-400 leading-relaxed text-sm">
+                  <p className="text-gray-500 dark:text-gray-400 leading-relaxed text-sm">
                     {feature.description}
                   </p>
-
-                  <div className="mt-6 flex items-center gap-2 text-sm font-medium text-violet-400 opacity-0 group-hover:opacity-100 transition-all duration-300 translate-y-2 group-hover:translate-y-0">
-                    Learn more <ArrowRight className="w-4 h-4" />
-                  </div>
-                </motion.div>
+                </div>
               </FadeInSection>
             ))}
           </div>
@@ -292,15 +278,13 @@ const Home = () => {
       {/* ═══════════════ STATS SECTION ═══════════════ */}
       <section className="relative py-24">
         <div className="absolute inset-0 bg-gradient-to-b from-surface via-surface-100 to-surface" />
-        <GlowBlob className="w-72 h-72 bg-violet-600 top-0 left-1/4" />
-        <GlowBlob className="w-72 h-72 bg-cyan-600 bottom-0 right-1/4" />
 
         <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <FadeInSection className="text-center mb-14">
             <span className="inline-block text-sm font-semibold text-cyan-400 tracking-wider uppercase mb-4">
               By the Numbers
             </span>
-            <h2 className="font-heading text-3xl sm:text-4xl font-bold text-white">
+            <h2 className="font-heading text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white">
               Trusted by Libraries Everywhere
             </h2>
           </FadeInSection>
@@ -308,21 +292,19 @@ const Home = () => {
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
             {stats.map((stat, index) => (
               <FadeInSection key={index} delay={index * 0.15}>
-                <motion.div
-                  whileHover={{ y: -6, scale: 1.02 }}
-                  transition={{ type: "spring", stiffness: 300 }}
-                  className="glass-card p-8 text-center group"
+                <div
+                  className="bg-white dark:bg-surface-200 border border-gray-200 dark:border-white/10 rounded-2xl p-8 text-center hover:border-violet-300 dark:hover:border-violet-500/30 hover:shadow-lg dark:hover:shadow-violet-500/5 transition-all duration-300"
                 >
-                  <div className="inline-flex p-3 rounded-xl bg-gradient-to-br from-violet-500/20 to-cyan-500/20 mb-5 group-hover:from-violet-500/30 group-hover:to-cyan-500/30 transition-all">
-                    <stat.icon className="w-6 h-6 text-violet-400" />
+                  <div className="inline-flex p-3 rounded-xl bg-violet-50 dark:bg-violet-500/10 mb-5">
+                    <stat.icon className="w-6 h-6 text-violet-500 dark:text-violet-400" />
                   </div>
-                  <div className="font-heading text-4xl lg:text-5xl font-bold text-white mb-2">
+                  <div className="font-heading text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-2">
                     <CountUp target={stat.value} suffix={stat.suffix} />
                   </div>
                   <div className="text-gray-500 text-sm font-medium tracking-wide">
                     {stat.label}
                   </div>
-                </motion.div>
+                </div>
               </FadeInSection>
             ))}
           </div>
@@ -331,19 +313,17 @@ const Home = () => {
 
       {/* ═══════════════ CTA SECTION ═══════════════ */}
       <section className="relative py-24 lg:py-32">
-        <GlowBlob className="w-96 h-96 bg-violet-600 top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
-
         <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <FadeInSection>
-            <div className="glass-card p-12 lg:p-16">
+            <div className="bg-white dark:bg-surface-200 border border-gray-200 dark:border-white/10 rounded-2xl p-12 lg:p-16">
               <span className="inline-block text-sm font-semibold text-violet-400 tracking-wider uppercase mb-4">
                 Get Started Today
               </span>
-              <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-5">
+              <h2 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-5">
                 Ready to Transform{" "}
                 <span className="gradient-text">Your Library?</span>
               </h2>
-              <p className="text-gray-400 text-lg mb-10 max-w-xl mx-auto">
+              <p className="text-gray-500 dark:text-gray-400 text-lg mb-10 max-w-xl mx-auto">
                 Join thousands of libraries already using SmartLibrary. Start your journey today — it&apos;s free.
               </p>
 

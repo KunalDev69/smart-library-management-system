@@ -62,11 +62,11 @@ const VerifyOTP = () => {
         className="glass-card p-8 w-full max-w-md relative z-10"
       >
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-violet-500/20 to-cyan-500/20 border border-white/10 mb-4">
+          <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-gradient-to-br from-violet-500/20 to-cyan-500/20 border border-gray-200 dark:border-white/10 mb-4">
             <ShieldCheck className="w-7 h-7 text-violet-400" />
           </div>
-          <h1 className="font-heading text-2xl font-bold text-white">Verify Your Email</h1>
-          <p className="text-gray-400 mt-2">
+          <h1 className="font-heading text-2xl font-bold text-gray-900 dark:text-white">Verify Your Email</h1>
+          <p className="text-gray-500 dark:text-gray-400 mt-2">
             Enter the 6-digit OTP sent to <br />
             <span className="font-medium text-violet-400">{email}</span>
           </p>
@@ -74,14 +74,14 @@ const VerifyOTP = () => {
 
         <form onSubmit={handleVerify} className="space-y-5">
           <div>
-            <label className="block text-sm font-medium text-gray-400 mb-1.5">Enter OTP</label>
+            <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">Enter OTP</label>
             <input
               type="text"
               value={otp}
               onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
               maxLength={6}
               placeholder="000000"
-              className="w-full px-4 py-3 text-center text-2xl tracking-widest bg-surface-200/80 border border-white/10 rounded-xl text-white placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50 transition-all font-bold"
+              className="w-full px-4 py-3 text-center text-2xl tracking-widest bg-white dark:bg-surface-200 border border-gray-300 dark:border-white/10 rounded-xl text-gray-950 dark:text-white placeholder-gray-300 dark:placeholder-gray-600 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50 transition-all font-bold"
             />
             <p className="text-xs text-gray-500 mt-1.5">OTP is valid for 10 minutes</p>
           </div>

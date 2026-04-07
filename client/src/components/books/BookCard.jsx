@@ -27,7 +27,7 @@ const BookCard = ({ book }) => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden hover:shadow-md transition-shadow">
+    <div className="bg-white dark:bg-surface-200 rounded-xl shadow-sm border border-gray-100 dark:border-white/10 overflow-hidden hover:shadow-md transition-shadow">
       {/* Book cover image - links to detail page */}
       <Link to={`/books/${book._id}`} className="block">
         <div className="h-48 bg-gradient-to-br from-indigo-100 to-purple-100 flex items-center justify-center">
@@ -35,6 +35,7 @@ const BookCard = ({ book }) => {
             <img
               src={book.coverImage}
               alt={book.title}
+              loading="lazy"
               className="h-full w-full object-cover"
             />
           ) : (
@@ -45,11 +46,11 @@ const BookCard = ({ book }) => {
 
       <div className="p-4">
         {/* Category badge */}
-        <span className="inline-block bg-indigo-50 text-indigo-700 text-xs font-medium px-2 py-1 rounded-full mb-2">
+        <span className="inline-block bg-indigo-50 dark:bg-indigo-500/10 text-indigo-700 dark:text-indigo-400 text-xs font-medium px-2 py-1 rounded-full mb-2">
           {book.category}
         </span>
 
-        <h3 className="font-bold text-gray-800 text-lg leading-tight mb-1 line-clamp-2">
+        <h3 className="font-bold text-gray-800 dark:text-white text-lg leading-tight mb-1 line-clamp-2">
           <Link to={`/books/${book._id}`} className="hover:text-indigo-600 transition-colors">
             {book.title}
           </Link>
@@ -73,8 +74,8 @@ const BookCard = ({ book }) => {
           <span
             className={`text-xs font-semibold px-2 py-1 rounded-full ${
               book.availability
-                ? "bg-green-100 text-green-700"
-                : "bg-red-100 text-red-700"
+                ? "bg-green-100 dark:bg-emerald-500/10 text-green-700 dark:text-emerald-400"
+                : "bg-red-100 dark:bg-red-500/10 text-red-700 dark:text-red-400"
             }`}
           >
             {book.availability ? "Available" : "Borrowed"}

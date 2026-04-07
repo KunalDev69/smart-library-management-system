@@ -13,11 +13,11 @@ const Contact = () => {
   const handleSubmit = (e) => {
     e.preventDefault();
     setLoading(true);
-    setTimeout(() => {
-      setLoading(false);
-      toast.success("Message sent successfully! We'll get back to you soon.");
-      setFormData({ name: "", email: "", message: "" });
-    }, 1500);
+    const mailtoLink = `mailto:library@smartlms.com?subject=Contact from ${encodeURIComponent(formData.name)}&body=${encodeURIComponent(formData.message + "\n\nFrom: " + formData.name + " (" + formData.email + ")")}`;
+    window.open(mailtoLink, "_blank");
+    setLoading(false);
+    toast.success("Opening your email client...");
+    setFormData({ name: "", email: "", message: "" });
   };
 
   const contactInfo = [
@@ -36,14 +36,14 @@ const Contact = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-12"
         >
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 rounded-full bg-white/5 border border-white/10 backdrop-blur-sm">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 mb-4 rounded-full bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 backdrop-blur-sm">
             <MessageSquare className="w-4 h-4 text-violet-400" />
-            <span className="text-sm text-gray-300 font-medium">Get in Touch</span>
+            <span className="text-sm text-gray-600 dark:text-gray-300 font-medium">Get in Touch</span>
           </div>
-          <h1 className="font-heading text-4xl sm:text-5xl font-bold text-white mb-4">
+          <h1 className="font-heading text-4xl sm:text-5xl font-bold text-gray-950 dark:text-white mb-4">
             Contact <span className="gradient-text">Us</span>
           </h1>
-          <p className="text-gray-400 text-lg">
+          <p className="text-gray-500 dark:text-gray-400 text-lg">
             Have questions? We&apos;d love to hear from you.
           </p>
         </motion.div>
@@ -56,10 +56,10 @@ const Contact = () => {
             transition={{ duration: 0.6, delay: 0.15 }}
             className="glass-card p-8"
           >
-            <h2 className="font-heading text-xl font-bold text-white mb-6">Send us a Message</h2>
+            <h2 className="font-heading text-xl font-bold text-gray-950 dark:text-white mb-6">Send us a Message</h2>
             <form onSubmit={handleSubmit} className="space-y-5">
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1.5">Name</label>
+                <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">Name</label>
                 <input
                   type="text"
                   name="name"
@@ -67,11 +67,11 @@ const Contact = () => {
                   onChange={handleChange}
                   required
                   placeholder="Your name"
-                  className="w-full px-4 py-2.5 bg-surface-200/80 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50 transition-all"
+                  className="w-full px-4 py-2.5 bg-white dark:bg-surface-200 border border-gray-300 dark:border-white/10 rounded-xl text-gray-950 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50 transition-all"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1.5">Email</label>
+                <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">Email</label>
                 <input
                   type="email"
                   name="email"
@@ -79,11 +79,11 @@ const Contact = () => {
                   onChange={handleChange}
                   required
                   placeholder="you@example.com"
-                  className="w-full px-4 py-2.5 bg-surface-200/80 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50 transition-all"
+                  className="w-full px-4 py-2.5 bg-white dark:bg-surface-200 border border-gray-300 dark:border-white/10 rounded-xl text-gray-950 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50 transition-all"
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-400 mb-1.5">Message</label>
+                <label className="block text-sm font-medium text-gray-600 dark:text-gray-400 mb-1.5">Message</label>
                 <textarea
                   name="message"
                   value={formData.message}
@@ -91,7 +91,7 @@ const Contact = () => {
                   required
                   rows={5}
                   placeholder="Write your message..."
-                  className="w-full px-4 py-2.5 bg-surface-200/80 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50 transition-all resize-none"
+                  className="w-full px-4 py-2.5 bg-white dark:bg-surface-200 border border-gray-300 dark:border-white/10 rounded-xl text-gray-950 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-violet-500/50 focus:border-violet-500/50 transition-all resize-none"
                 />
               </div>
               <motion.button
@@ -117,8 +117,8 @@ const Contact = () => {
             <div className="glass-card p-8 relative overflow-hidden">
               <div className="absolute inset-0 bg-gradient-to-br from-violet-500/10 to-cyan-500/5" />
               <div className="relative z-10">
-                <h2 className="font-heading text-xl font-bold text-white mb-6">Get in Touch</h2>
-                <p className="text-gray-400 mb-6">
+                <h2 className="font-heading text-xl font-bold text-gray-950 dark:text-white mb-6">Get in Touch</h2>
+                <p className="text-gray-500 dark:text-gray-400 mb-6">
                   We&apos;re here to help! Reach out to us through any of the following channels.
                 </p>
                 <div className="space-y-4">
@@ -129,7 +129,7 @@ const Contact = () => {
                       </div>
                       <div>
                         <p className="text-gray-500 text-xs">{info.label}</p>
-                        <p className="text-white font-medium text-sm">{info.value}</p>
+                        <p className="text-gray-950 dark:text-white font-medium text-sm">{info.value}</p>
                       </div>
                     </div>
                   ))}
@@ -138,20 +138,20 @@ const Contact = () => {
             </div>
 
             <div className="glass-card p-8">
-              <h3 className="font-heading font-bold text-white mb-4 flex items-center gap-2">
+              <h3 className="font-heading font-bold text-gray-950 dark:text-white mb-4 flex items-center gap-2">
                 <Clock className="w-4 h-4 text-cyan-400" /> Library Hours
               </h3>
               <div className="space-y-3 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-gray-400">Monday - Friday</span>
-                  <span className="text-white font-medium">9:00 AM - 6:00 PM</span>
+                  <span className="text-gray-500 dark:text-gray-400">Monday - Friday</span>
+                  <span className="text-gray-950 dark:text-white font-medium">9:00 AM - 6:00 PM</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-400">Saturday</span>
-                  <span className="text-white font-medium">10:00 AM - 4:00 PM</span>
+                  <span className="text-gray-500 dark:text-gray-400">Saturday</span>
+                  <span className="text-gray-950 dark:text-white font-medium">10:00 AM - 4:00 PM</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-gray-400">Sunday</span>
+                  <span className="text-gray-500 dark:text-gray-400">Sunday</span>
                   <span className="text-red-400 font-medium">Closed</span>
                 </div>
               </div>

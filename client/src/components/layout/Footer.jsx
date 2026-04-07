@@ -32,7 +32,7 @@ const Footer = () => {
       {/* Gradient top border */}
       <div className="h-px bg-gradient-to-r from-transparent via-violet-500/50 to-transparent" />
 
-      <div className="bg-surface-100/50 backdrop-blur-sm">
+      <div className="bg-white/80 dark:bg-surface-100/50 backdrop-blur-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
             {/* Brand */}
@@ -42,8 +42,8 @@ const Footer = () => {
                   <div className="absolute inset-0 bg-violet-500/30 blur-lg rounded-full" />
                   <BookOpen className="relative w-6 h-6 text-violet-400" />
                 </div>
-                <span className="font-heading font-bold text-lg text-white">
-                  Smart<span className="text-violet-400">Library</span>
+                <span className="font-heading font-bold text-lg text-gray-900 dark:text-white">
+                  Smart<span className="text-violet-600 dark:text-violet-400">Library</span>
                 </span>
               </Link>
               <p className="text-sm text-gray-500 leading-relaxed mb-6">
@@ -56,7 +56,7 @@ const Footer = () => {
                     href={social.href}
                     whileHover={{ scale: 1.1, y: -2 }}
                     whileTap={{ scale: 0.95 }}
-                    className="w-9 h-9 rounded-lg bg-white/5 border border-white/10 flex items-center justify-center text-gray-500 hover:text-violet-400 hover:border-violet-500/30 transition-all"
+                    className="w-9 h-9 rounded-lg bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 flex items-center justify-center text-gray-500 hover:text-violet-600 dark:hover:text-violet-400 hover:border-violet-500/30 transition-all"
                     title={social.label}
                   >
                     <social.icon className="w-4 h-4" />
@@ -67,7 +67,7 @@ const Footer = () => {
 
             {/* Quick Links */}
             <div>
-              <h3 className="text-sm font-heading font-semibold text-white mb-5 tracking-wider uppercase">
+              <h3 className="text-sm font-heading font-semibold text-gray-900 dark:text-white mb-5 tracking-wider uppercase">
                 Quick Links
               </h3>
               <ul className="space-y-3">
@@ -87,7 +87,7 @@ const Footer = () => {
 
             {/* Product */}
             <div>
-              <h3 className="text-sm font-heading font-semibold text-white mb-5 tracking-wider uppercase">
+              <h3 className="text-sm font-heading font-semibold text-gray-900 dark:text-white mb-5 tracking-wider uppercase">
                 Product
               </h3>
               <ul className="space-y-3">
@@ -107,7 +107,7 @@ const Footer = () => {
 
             {/* Newsletter */}
             <div>
-              <h3 className="text-sm font-heading font-semibold text-white mb-5 tracking-wider uppercase">
+              <h3 className="text-sm font-heading font-semibold text-gray-900 dark:text-white mb-5 tracking-wider uppercase">
                 Stay Updated
               </h3>
               <p className="text-sm text-gray-500 mb-4">
@@ -119,7 +119,7 @@ const Footer = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="your@email.com"
-                  className="flex-1 px-4 py-2.5 bg-white/5 border border-white/10 rounded-xl text-sm text-white placeholder-gray-600 focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/30 transition-all"
+                  className="flex-1 px-4 py-2.5 bg-gray-100 dark:bg-white/5 border border-gray-200 dark:border-white/10 rounded-xl text-sm text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-600 focus:outline-none focus:border-violet-500/50 focus:ring-1 focus:ring-violet-500/30 transition-all"
                 />
                 <motion.button
                   whileHover={{ scale: 1.05 }}
@@ -133,7 +133,7 @@ const Footer = () => {
           </div>
 
           {/* Bottom */}
-          <div className="mt-14 pt-8 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div className="mt-14 pt-8 border-t border-gray-200 dark:border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4">
             <p className="text-xs text-gray-600">
               © {new Date().getFullYear()} SmartLibrary. Crafted with precision. All rights reserved.
             </p>
