@@ -146,9 +146,12 @@ exports.login = catchAsyncErrors(async (req, res, next) => {
 // @route   GET /api/auth/logout
 // @access  Private
 exports.logout = catchAsyncErrors(async (req, res, next) => {
+  const isProduction = process.env.NODE_ENV === "production";
   res.cookie("token", null, {
     expires: new Date(Date.now()),
     httpOnly: true,
+    secure: isProduction,
+    sameSite: isProduction ? "none" : "strict",
   });
 
   res.status(200).json({
