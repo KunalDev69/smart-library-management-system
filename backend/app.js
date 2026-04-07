@@ -86,22 +86,6 @@ app.get("/", (req, res) => {
   });
 });
 
-// Temporary: test email route (remove after debugging)
-app.get("/api/test-email", async (req, res) => {
-  try {
-    const sendEmail = require("./utils/sendEmail");
-    await sendEmail({
-      email: "panchalken50@gmail.com",
-      subject: "Render SMTP Test",
-      html: "<p>If you see this, SMTP works on Render!</p>",
-    });
-    res.json({ success: true, message: "Email sent successfully" });
-  } catch (error) {
-    console.error("Test email error:", error);
-    res.status(500).json({ success: false, message: error.message, code: error.code });
-  }
-});
-
 // Centralized error handler (must be after routes)
 app.use(errorMiddleware);
 
