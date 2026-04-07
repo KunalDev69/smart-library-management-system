@@ -111,12 +111,14 @@ const authSlice = createSlice({
     loading: false,
     error: null,
     message: null,
+    resetUrl: null,
   },
   reducers: {
     // Clear error and message
     clearAuthState: (state) => {
       state.error = null;
       state.message = null;
+      state.resetUrl = null;
     },
   },
   extraReducers: (builder) => {
@@ -195,6 +197,7 @@ const authSlice = createSlice({
       .addCase(forgotPassword.fulfilled, (state, action) => {
         state.loading = false;
         state.message = action.payload.message;
+        state.resetUrl = action.payload.resetUrl || null;
       })
       .addCase(forgotPassword.rejected, (state, action) => {
         state.loading = false;

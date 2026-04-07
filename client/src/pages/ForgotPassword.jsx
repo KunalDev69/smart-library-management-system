@@ -4,11 +4,11 @@ import { Link } from "react-router-dom";
 import { forgotPassword, clearAuthState } from "../redux/slices/authSlice";
 import toast from "react-hot-toast";
 import { motion } from "framer-motion";
-import { Mail } from "lucide-react";
+import { Mail, ExternalLink } from "lucide-react";
 
 const ForgotPassword = () => {
   const dispatch = useDispatch();
-  const { loading, error, message } = useSelector((state) => state.auth);
+  const { loading, error, message, resetUrl } = useSelector((state) => state.auth);
   const [email, setEmail] = useState("");
 
   useEffect(() => {
@@ -16,11 +16,11 @@ const ForgotPassword = () => {
       toast.error(error);
       dispatch(clearAuthState());
     }
-    if (message) {
+    if (message && !resetUrl) {
       toast.success(message);
       dispatch(clearAuthState());
     }
-  }, [error, message, dispatch]);
+  }, [error, message, resetUrl, dispatch]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -76,6 +76,25 @@ const ForgotPassword = () => {
             {loading ? "Sending..." : "Send Reset Link"}
           </motion.button>
         </form>
+
+        {resetUrl && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mt-5 p-4 bg-violet-500/10 border border-violet-500/20 rounded-xl"
+          >
+            <p className="text-sm text-gray-600 dark:text-gray-300 mb-2">
+              Click the link below to reset your password:
+            </p>
+            <Link
+              to={resetUrl.replace(/^https?:\/\/[^/]+/, "")}
+              className="inline-flex items-center gap-1.5 text-violet-400 hover:text-violet-300 font-medium text-sm break-all transition-colors"
+            >
+              <ExternalLink className="w-4 h-4 flex-shrink-0" />
+              Reset Password
+            </Link>
+          </motion.div>
+        )}
 
         <p className="text-center text-sm text-gray-500 mt-6">
           Remember your password?{" "}

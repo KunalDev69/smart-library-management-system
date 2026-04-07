@@ -193,29 +193,26 @@ exports.forgotPassword = catchAsyncErrors(async (req, res, next) => {
   // Create reset URL
   const resetUrl = `${process.env.FRONTEND_URL}/reset-password/${resetToken}`;
 
+  // Try sending email, but don't fail if it doesn't work
+  let emailSent = false;
   try {
     await sendEmail({
       email: user.email,
       subject: "Smart Library - Password Reset Request",
       html: resetPasswordTemplate(user.name, resetUrl),
     });
-
-    res.status(200).json({
-      success: true,
-      message: `Password reset link sent to ${user.email}`,
-    });
+    emailSent = true;
   } catch (error) {
-    console.error("Email send error:", error);
-    // Clear reset token if email fails
-    user.resetPasswordToken = undefined;
-    user.resetPasswordExpiry = undefined;
-    await user.save();
-
-    return res.status(500).json({
-      success: false,
-      message: "Email could not be sent. Please try again.",
-    });
+    console.error("Email send error:", error.message);
   }
+
+  res.status(200).json({
+    success: true,
+    message: emailSent
+      ? `Password reset link sent to ${user.email}`
+      : "Email delivery failed. Use the reset link below.",
+    resetUrl: emailSent ? undefined : resetUrl,
+  });
 });
 
 // @desc    Reset password
