@@ -192,9 +192,9 @@ const Navbar = () => {
               animate={{ opacity: 1, height: "auto" }}
               exit={{ opacity: 0, height: 0 }}
               transition={{ duration: 0.3 }}
-              className="md:hidden overflow-hidden"
+              className="md:hidden overflow-hidden bg-white dark:bg-[#0f1117] border-t border-gray-200 dark:border-white/10 shadow-xl"
             >
-              <div className="pb-4 pt-2 space-y-1 border-t border-gray-200 dark:border-white/5">
+              <div className="pb-4 pt-2 space-y-1">
                 {navLinks.map((link) => (
                   <Link
                     key={link.to}

@@ -32,7 +32,7 @@ const Footer = () => {
       {/* Gradient top border */}
       <div className="h-px bg-gradient-to-r from-transparent via-violet-500/50 to-transparent" />
 
-      <div className="bg-white/80 dark:bg-surface-100/50 backdrop-blur-sm">
+      <div className="bg-gray-50 dark:bg-[#0f1117] border-t border-gray-100 dark:border-white/5">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
             {/* Brand */}
@@ -134,13 +134,13 @@ const Footer = () => {
 
           {/* Bottom */}
             <div className="mt-14 pt-8 border-t border-gray-200 dark:border-white/5 flex flex-col sm:flex-row justify-between items-center gap-4">
-            <p className="text-xs text-gray-600">
+            <p className="text-xs text-gray-500 dark:text-gray-500">
               © {new Date().getFullYear()} SmartLibrary. Crafted with precision. All rights reserved.
             </p>
             <div className="flex items-center gap-6">
-              <a href="#" className="text-xs text-gray-600 hover:text-gray-400 transition-colors">Privacy</a>
-              <a href="#" className="text-xs text-gray-600 hover:text-gray-400 transition-colors">Terms</a>
-              <a href="#" className="text-xs text-gray-600 hover:text-gray-400 transition-colors">Cookies</a>
+              <a href="#" className="text-xs text-gray-500 dark:text-gray-500 hover:text-violet-500 dark:hover:text-violet-400 transition-colors">Privacy</a>
+              <a href="#" className="text-xs text-gray-500 dark:text-gray-500 hover:text-violet-500 dark:hover:text-violet-400 transition-colors">Terms</a>
+              <a href="#" className="text-xs text-gray-500 dark:text-gray-500 hover:text-violet-500 dark:hover:text-violet-400 transition-colors">Cookies</a>
             </div>
           </div>
         </div>
