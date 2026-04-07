@@ -25,7 +25,11 @@ const csrfProtection = (req, res, next) => {
   // Validate origin or referer against allowed origin
   const requestOrigin = origin || (referer ? new URL(referer).origin : null);
 
-  if (requestOrigin && requestOrigin !== allowedOrigin) {
+  // Strip trailing slash for comparison
+  const normalizedAllowed = allowedOrigin ? allowedOrigin.replace(/\/$/, "") : "";
+  const normalizedRequest = requestOrigin ? requestOrigin.replace(/\/$/, "") : "";
+
+  if (normalizedRequest && normalizedRequest !== normalizedAllowed) {
     return res.status(403).json({
       success: false,
       message: "CSRF validation failed: invalid origin",

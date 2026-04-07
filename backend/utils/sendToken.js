@@ -8,12 +8,14 @@ const sendToken = (user, statusCode, res, message = "Success") => {
   });
 
   // Cookie options
+  const isProduction = process.env.NODE_ENV === "production";
   const cookieOptions = {
     httpOnly: true, // Prevent XSS attacks
     expires: new Date(
       Date.now() + process.env.COOKIE_EXPIRE * 24 * 60 * 60 * 1000
     ),
-    sameSite: "strict", // CSRF protection: prevent cross-site request forgery
+    secure: isProduction, // HTTPS only in production
+    sameSite: isProduction ? "none" : "strict", // Cross-site cookies in production
   };
 
   // Send token as cookie and in response
