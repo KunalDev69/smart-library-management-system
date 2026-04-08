@@ -15,6 +15,15 @@ const VerifyOTP = () => {
   const email = localStorage.getItem("verifyEmail") || "";
 
   useEffect(() => {
+    // If no email stored, user shouldn't be on this page
+    if (!email) {
+      toast.error("Please register first.");
+      navigate("/register");
+      return;
+    }
+  }, [email, navigate]);
+
+  useEffect(() => {
     if (isAuthenticated) {
       localStorage.removeItem("verifyEmail");
       navigate("/member/dashboard");

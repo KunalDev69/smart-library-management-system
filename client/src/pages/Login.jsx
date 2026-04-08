@@ -14,10 +14,10 @@ const Login = () => {
   const [formData, setFormData] = useState({ email: "", password: "" });
 
   useEffect(() => {
-    if (isAuthenticated && user) {
+    if (!loading && isAuthenticated && user) {
       navigate(user.role === "admin" ? "/admin/dashboard" : "/member/dashboard");
     }
-  }, [isAuthenticated, user, navigate]);
+  }, [loading, isAuthenticated, user, navigate]);
 
   useEffect(() => {
     if (error) {

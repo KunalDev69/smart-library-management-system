@@ -10,7 +10,7 @@ const ResetPassword = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const { token } = useParams();
-  const { loading, error, message } = useSelector((state) => state.auth);
+  const { loading, error } = useSelector((state) => state.auth);
 
   const [formData, setFormData] = useState({ password: "", confirmPassword: "" });
 
@@ -19,17 +19,12 @@ const ResetPassword = () => {
       toast.error(error);
       dispatch(clearAuthState());
     }
-    if (message) {
-      toast.success(message);
-      dispatch(clearAuthState());
-      navigate("/login");
-    }
-  }, [error, message, dispatch, navigate]);
+  }, [error, dispatch]);
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
       toast.error("Passwords do not match");
@@ -39,7 +34,12 @@ const ResetPassword = () => {
       toast.error("Password must be at least 6 characters");
       return;
     }
-    dispatch(resetPassword({ token, ...formData }));
+    const result = await dispatch(resetPassword({ token, ...formData }));
+    if (result.meta.requestStatus === "fulfilled") {
+      toast.success(result.payload.message || "Password reset successfully!");
+      dispatch(clearAuthState());
+      navigate("/login");
+    }
   };
 
   return (

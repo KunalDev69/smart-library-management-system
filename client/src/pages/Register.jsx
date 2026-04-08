@@ -9,7 +9,7 @@ import { User, Mail, Lock, BookOpen } from "lucide-react";
 const Register = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { loading, error, message } = useSelector((state) => state.auth);
+  const { loading, error } = useSelector((state) => state.auth);
 
   const [formData, setFormData] = useState({ name: "", email: "", password: "" });
 
@@ -18,13 +18,7 @@ const Register = () => {
       toast.error(error);
       dispatch(clearAuthState());
     }
-    if (message) {
-      toast.success(message);
-      localStorage.setItem("verifyEmail", formData.email);
-      navigate("/verify-otp");
-      dispatch(clearAuthState());
-    }
-  }, [error, message, dispatch, navigate, formData.email]);
+  }, [error, dispatch]);
 
   const handleChange = (e) =>
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -35,7 +29,13 @@ const Register = () => {
       toast.error("Password must be at least 6 characters");
       return;
     }
-    dispatch(register(formData));
+    const result = await dispatch(register(formData));
+    if (result.meta.requestStatus === "fulfilled") {
+      toast.success(result.payload.message || "Registration successful!");
+      localStorage.setItem("verifyEmail", formData.email);
+      dispatch(clearAuthState());
+      navigate("/verify-otp");
+    }
   };
 
   return (

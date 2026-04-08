@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { issueBook } from "../../redux/slices/borrowSlice";
 import toast from "react-hot-toast";
 import { FiBookOpen, FiStar } from "react-icons/fi";
@@ -10,19 +10,21 @@ import WaitlistButton from "./WaitlistButton";
 // Individual book display card
 const BookCard = ({ book }) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const { isAuthenticated, user } = useSelector((state) => state.auth);
   const { loading } = useSelector((state) => state.borrow);
 
   const handleBorrow = async () => {
     if (!isAuthenticated) {
       toast.error("Please log in to borrow books");
+      navigate("/login");
       return;
     }
     const result = await dispatch(issueBook(book._id));
     if (result.meta.requestStatus === "fulfilled") {
-      toast.success("Book borrowed successfully!");
+      toast.success("Borrow request submitted! Waiting for admin approval.");
     } else {
-      toast.error(result.payload || "Failed to borrow book");
+      toast.error(result.payload || "Failed to submit borrow request");
     }
   };
 
@@ -82,14 +84,23 @@ const BookCard = ({ book }) => {
           </span>
 
           {/* Borrow button for available books */}
-          {isAuthenticated && user?.role === "member" && book.availability && (
-            <button
-              onClick={handleBorrow}
-              disabled={loading}
-              className="bg-indigo-600 text-white text-sm px-3 py-1.5 rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50"
-            >
-              {loading ? "..." : "Borrow"}
-            </button>
+          {book.availability && (
+            isAuthenticated && user?.role === "member" ? (
+              <button
+                onClick={handleBorrow}
+                disabled={loading}
+                className="bg-indigo-600 text-white text-sm px-3 py-1.5 rounded-lg hover:bg-indigo-700 transition-colors disabled:opacity-50"
+              >
+                {loading ? "..." : "Request Borrow"}
+              </button>
+            ) : !isAuthenticated ? (
+              <Link
+                to="/login"
+                className="bg-indigo-600 text-white text-sm px-3 py-1.5 rounded-lg hover:bg-indigo-700 transition-colors"
+              >
+                Login to Borrow
+              </Link>
+            ) : null
           )}
 
           {/* Waitlist button for unavailable books */}

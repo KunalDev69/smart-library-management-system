@@ -58,7 +58,9 @@ const MyBooks = () => {
     }
   };
 
+  const pendingRequests = myRecords.filter((r) => r.status === "pending");
   const activeBorrows = myRecords.filter((r) => r.status === "borrowed");
+  const rejectedRecords = myRecords.filter((r) => r.status === "rejected");
   const returnedBooks = myRecords.filter((r) => r.status === "returned");
 
   if (loading) return <Loader />;
@@ -67,6 +69,20 @@ const MyBooks = () => {
     <div className="min-h-screen pt-24 pb-16">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <h1 className="font-heading text-2xl font-bold text-gray-900 dark:text-white mb-8">My Books</h1>
+
+        {/* Pending Requests */}
+        {pendingRequests.length > 0 && (
+          <section className="mb-10">
+            <h2 className="text-lg font-semibold text-yellow-500 dark:text-yellow-400 mb-4">
+              Pending Requests ({pendingRequests.length})
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {pendingRequests.map((record) => (
+                <BorrowCard key={record._id} record={record} />
+              ))}
+            </div>
+          </section>
+        )}
 
         {/* Currently Borrowed */}
         <section className="mb-10">
@@ -121,6 +137,20 @@ const MyBooks = () => {
                     <Trash2 className="w-4 h-4" />
                   </button>
                 </div>
+              ))}
+            </div>
+          </section>
+        )}
+
+        {/* Rejected Requests */}
+        {rejectedRecords.length > 0 && (
+          <section className="mb-10">
+            <h2 className="text-lg font-semibold text-red-500 dark:text-red-400 mb-4">
+              Rejected Requests ({rejectedRecords.length})
+            </h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {rejectedRecords.map((record) => (
+                <BorrowCard key={record._id} record={record} />
               ))}
             </div>
           </section>

@@ -8,7 +8,7 @@ import { Mail, ExternalLink } from "lucide-react";
 
 const ForgotPassword = () => {
   const dispatch = useDispatch();
-  const { loading, error, message, resetUrl } = useSelector((state) => state.auth);
+  const { loading, error, resetUrl } = useSelector((state) => state.auth);
   const [email, setEmail] = useState("");
 
   useEffect(() => {
@@ -16,15 +16,14 @@ const ForgotPassword = () => {
       toast.error(error);
       dispatch(clearAuthState());
     }
-    if (message && !resetUrl) {
-      toast.success(message);
-      dispatch(clearAuthState());
-    }
-  }, [error, message, resetUrl, dispatch]);
+  }, [error, dispatch]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    dispatch(forgotPassword(email));
+    const result = await dispatch(forgotPassword(email));
+    if (result.meta.requestStatus === "fulfilled") {
+      toast.success(result.payload.message || "Reset link sent!");
+    }
   };
 
   return (

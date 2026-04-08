@@ -107,16 +107,25 @@ const BookDetail = () => {
                   {book.availability ? "✓ Available" : "✗ Not Available"}
                 </span>
 
-                {isAuthenticated && user?.role === "member" && book.availability && (
-                  <motion.button
-                    whileHover={{ scale: 1.03 }}
-                    whileTap={{ scale: 0.97 }}
-                    onClick={handleBorrow}
-                    disabled={borrowLoading}
-                    className="bg-gradient-to-r from-violet-600 to-indigo-600 text-white px-5 py-2 rounded-xl hover:from-violet-500 hover:to-indigo-500 transition-all disabled:opacity-50 font-medium shadow-glow-sm"
-                  >
-                    {borrowLoading ? "Processing…" : "Borrow Now"}
-                  </motion.button>
+                {book.availability && (
+                  isAuthenticated && user?.role === "member" ? (
+                    <motion.button
+                      whileHover={{ scale: 1.03 }}
+                      whileTap={{ scale: 0.97 }}
+                      onClick={handleBorrow}
+                      disabled={borrowLoading}
+                      className="bg-gradient-to-r from-violet-600 to-indigo-600 text-white px-5 py-2 rounded-xl hover:from-violet-500 hover:to-indigo-500 transition-all disabled:opacity-50 font-medium shadow-glow-sm"
+                    >
+                      {borrowLoading ? "Processing…" : "Request Borrow"}
+                    </motion.button>
+                  ) : !isAuthenticated ? (
+                    <Link
+                      to="/login"
+                      className="bg-gradient-to-r from-violet-600 to-indigo-600 text-white px-5 py-2 rounded-xl hover:from-violet-500 hover:to-indigo-500 transition-all font-medium shadow-glow-sm"
+                    >
+                      Login to Borrow
+                    </Link>
+                  ) : null
                 )}
 
                 <WaitlistButton bookId={book._id} availability={book.availability} />
